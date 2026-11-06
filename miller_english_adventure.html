@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miller's English Adventure</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Miller 的國小英語互動闖關：Unit 1 What a Day!、Unit 2 In the Classroom 與總複習，共 5 關。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#FFF7E6; --bg-2:#E3F2FF; --bg-3:#F1ECFF;
+  --card:#FFFFFF; --card-2:#F6F8FC;
+  --ink:#1E293B; --muted:#64748B; --line:#E2E8F0;
+  --ok:#059669; --ok-bg:#DCFCE7; --bad:#E11D48; --bad-bg:#FFE4E6;
+  --hl:#DB2777; --star:#F59E0B; --star-off:#D6DCE5;
+  --clock-face:#FFFFFF; --tick:#CBD5E1; --tick-big:#F59E0B; --hand-h:#2563EB; --hand-m:#F97316;
+  --c1:#FBBF24; --c1-bg:#FEF3C7; --c1-ink:#92400E; --c1-sh:#B45309;
+  --c2:#FB923C; --c2-bg:#FFEDD5; --c2-ink:#9A3412; --c2-sh:#C2410C;
+  --c3:#38BDF8; --c3-bg:#E0F2FE; --c3-ink:#075985; --c3-sh:#0284C7;
+  --c4:#A78BFA; --c4-bg:#EDE9FE; --c4-ink:#5B21B6; --c4-sh:#7C3AED;
+  --c5:#34D399; --c5-bg:#D1FAE5; --c5-ink:#065F46; --c5-sh:#059669;
+  --a:var(--c3); --a-bg:var(--c3-bg); --a-ink:var(--c3-ink); --a-sh:var(--c3-sh); --a-on:#0C2A3F;
+  --shadow:0 1px 0 rgba(15,23,42,.04),0 12px 28px -14px rgba(15,23,42,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E1525; --bg-2:#10223A; --bg-3:#1D1838;
+    --card:#18233A; --card-2:#121B2E;
+    --ink:#EEF2F7; --muted:#9AA8BC; --line:#2C3A55;
+    --ok:#34D399; --ok-bg:#0B3B2C; --bad:#FB7185; --bad-bg:#43111F;
+    --hl:#F472B6; --star-off:#3A4763;
+    --clock-face:#0E1525; --tick:#3A4763;
+    --c1-bg:#3A2A0C; --c1-ink:#FCD34D; --c2-bg:#3B220F; --c2-ink:#FDBA74;
+    --c3-bg:#0C2B40; --c3-ink:#7DD3FC; --c4-bg:#271F48; --c4-ink:#C4B5FD;
+    --c5-bg:#0A3529; --c5-ink:#6EE7B7;
+    --shadow:0 12px 28px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1525; --bg-2:#10223A; --bg-3:#1D1838;
+  --card:#18233A; --card-2:#121B2E;
+  --ink:#EEF2F7; --muted:#9AA8BC; --line:#2C3A55;
+  --ok:#34D399; --ok-bg:#0B3B2C; --bad:#FB7185; --bad-bg:#43111F;
+  --hl:#F472B6; --star-off:#3A4763;
+  --clock-face:#0E1525; --tick:#3A4763;
+  --c1-bg:#3A2A0C; --c1-ink:#FCD34D; --c2-bg:#3B220F; --c2-ink:#FDBA74;
+  --c3-bg:#0C2B40; --c3-ink:#7DD3FC; --c4-bg:#271F48; --c4-ink:#C4B5FD;
+  --c5-bg:#0A3529; --c5-ink:#6EE7B7;
+  --shadow:0 12px 28px -14px rgba(0,0,0,.6);
+}
+[data-lv="1"]{--a:var(--c1);--a-bg:var(--c1-bg);--a-ink:var(--c1-ink);--a-sh:var(--c1-sh);--a-on:#3B1D02}
+[data-lv="2"]{--a:var(--c2);--a-bg:var(--c2-bg);--a-ink:var(--c2-ink);--a-sh:var(--c2-sh);--a-on:#3B1305}
+[data-lv="3"]{--a:var(--c3);--a-bg:var(--c3-bg);--a-ink:var(--c3-ink);--a-sh:var(--c3-sh);--a-on:#0C2A3F}
+[data-lv="4"]{--a:var(--c4);--a-bg:var(--c4-bg);--a-ink:var(--c4-ink);--a-sh:var(--c4-sh);--a-on:#2E1065}
+[data-lv="5"]{--a:var(--c5);--a-bg:var(--c5-bg);--a-ink:var(--c5-ink);--a-sh:var(--c5-sh);--a-on:#022C22}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg);
+  background-image:radial-gradient(900px 500px at -10% -10%,var(--bg-2),transparent 60%),radial-gradient(800px 500px at 110% 110%,var(--bg-3),transparent 60%);
+  color:var(--ink); font-family:'Fredoka','PingFang TC','Microsoft JhengHei','Noto Sans TC',system-ui,sans-serif;
+  font-size:16px; line-height:1.5; -webkit-tap-highlight-color:transparent; overflow-x:hidden;
+}
+button{font:inherit;color:inherit}
+h2,h3,h4,p{margin:0}
+button:focus-visible{outline:3px solid var(--a);outline-offset:2px}
+.wrap{max-width:880px;margin:0 auto;padding-block:8px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:31;background:var(--card)}
+.ico{height:1em;width:auto;vertical-align:-.12em}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--card);background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .in{max-width:880px;margin:0 auto;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:8px}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;text-align:left;min-width:0}
+.brand .logo{flex:none;width:40px;height:40px;border-radius:12px;background:var(--c3-bg);display:grid;place-items:center;font-size:1.5rem}
+.brand b{display:block;font-size:1.05rem;font-weight:700;line-height:1.15}
+.brand small{display:block;font-size:.75rem;color:var(--muted)}
+.spacer{flex:1}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:999px;background:var(--card-2);border:1px solid var(--line);font-weight:600;font-size:.9rem;white-space:nowrap}
+.tbtn{height:38px;min-width:38px;padding:0 10px;border-radius:12px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap}
+@media (max-width:520px){.brand small{display:none}.brand b{font-size:.92rem}.tbtn .lbl{display:none}.pill{padding:6px 8px}}
+
+/* generic */
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px}
+.btn{appearance:none;border:0;border-radius:16px;padding:12px 20px;font-weight:600;font-size:1.05rem;background:var(--a);color:var(--a-on);box-shadow:0 4px 0 var(--a-sh);cursor:pointer;transition:transform .08s,box-shadow .08s,filter .15s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--a-sh)}
+.btn.ghost{background:var(--card);color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.big{font-size:1.15rem;padding:14px 26px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:0 4px 0 var(--a-sh)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.row-c{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.say-btn{border:0;background:var(--a-bg);color:var(--a-ink);border-radius:10px;padding:4px 10px;cursor:pointer;font-size:.92rem;font-weight:600;vertical-align:middle}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:3px 10px;margin:2px 2px;cursor:pointer;font-weight:600;font-size:.95rem}
+.chip:hover{border-color:var(--a)}
+.hl b,.got b,.chip b,.tbl b{color:var(--hl)}
+.stars{letter-spacing:2px;font-size:1.05rem;color:var(--star-off)}
+.stars .on{color:var(--star)}
+
+/* map */
+.hero{display:flex;gap:14px;align-items:center;margin:18px 0 6px}
+.penny{font-size:2.8rem;width:72px;height:72px;flex:none;border-radius:22px;background:var(--c3-bg);display:grid;place-items:center;animation:bob 3s ease-in-out infinite}
+.bubble{position:relative;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px 14px;flex:1;box-shadow:var(--shadow)}
+.bubble:before{content:'';position:absolute;left:-9px;top:26px;width:14px;height:14px;background:var(--card);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.bubble p{font-weight:500;margin-bottom:6px}
+.unit{margin-top:22px}
+.unit-h{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:0 0 10px}
+.unit-h .tag{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--a);color:var(--a-on)}
+.unit-h h3{font-size:1.2rem}
+.unit-h .uzh{color:var(--muted);font-size:.9rem}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.lv{display:flex;align-items:center;gap:14px;text-align:left;width:100%;border:2px solid var(--line);background:var(--card);border-radius:22px;padding:14px;cursor:pointer;box-shadow:0 5px 0 var(--line);transition:transform .1s,border-color .1s}
+.lv:hover{transform:translateY(-2px);border-color:var(--a)}
+.lv:active{transform:translateY(3px);box-shadow:0 2px 0 var(--line)}
+.lv .num{width:60px;height:60px;border-radius:18px;flex:none;display:grid;place-items:center;font-size:1.9rem;background:var(--a-bg);position:relative}
+.lv .num b{position:absolute;top:-8px;left:-8px;width:26px;height:26px;border-radius:50%;background:var(--a);color:var(--a-on);font-size:.85rem;display:grid;place-items:center;box-shadow:0 2px 0 var(--a-sh)}
+.lv-t{display:block;min-width:0}
+.lv-t .t{display:block;font-weight:700;font-size:1.12rem;line-height:1.25}
+.lv-t .e{display:block;font-size:.82rem;color:var(--a-ink);font-weight:600}
+.lv-t .s{display:block;font-size:.84rem;color:var(--muted);margin:3px 0 4px;line-height:1.35}
+.lv .go{font-size:.85rem;font-weight:700;color:var(--a-ink);background:var(--a-bg);border-radius:999px;padding:1px 10px;margin-left:6px}
+.lv.locked{opacity:.55;filter:grayscale(.8);cursor:not-allowed}
+.lv.locked:hover{transform:none;border-color:var(--line)}
+.foot{margin-top:30px;padding-top:14px;border-top:1px dashed var(--line);color:var(--muted);font-size:.85rem;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
+.foot .links{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.link{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer;color:var(--muted);font-size:.85rem}
+.link.armed{border-color:var(--bad);color:var(--bad)}
+
+/* level */
+.lv-head{display:flex;align-items:center;gap:12px;margin:14px 0 12px}
+.back{flex:none;width:44px;height:44px;border-radius:14px;border:2px solid var(--line);background:var(--card);cursor:pointer;font-size:1.2rem;font-weight:700}
+.back.armed{border-color:var(--bad);color:var(--bad)}
+.lv-head .num{width:52px;height:52px;border-radius:16px;flex:none;display:grid;place-items:center;font-size:1.7rem;background:var(--a-bg)}
+.lv-head .ut{font-size:.8rem;font-weight:700;color:var(--a-ink)}
+.lv-head h2{font-size:1.35rem;line-height:1.2}
+.lv-head h2 small{font-size:.85rem;color:var(--muted);font-weight:500;margin-left:4px}
+@media (max-width:520px){.lv-head h2 small{display:block;margin-left:0}}
+.steps{display:flex;gap:8px;margin:0 0 14px}
+.step{flex:1;text-align:center;padding:8px;border-radius:14px;background:var(--card-2);border:2px solid var(--line);font-weight:600;color:var(--muted);font-size:.95rem;cursor:pointer}
+.step.on{background:var(--a-bg);border-color:var(--a);color:var(--a-ink);cursor:default}
+.tip{display:flex;gap:10px;align-items:center;background:var(--a-bg);color:var(--a-ink);border-radius:16px;padding:10px 14px;margin-bottom:14px;font-weight:500}
+.tip span{font-size:1.6rem}
+.block{margin-bottom:16px}
+.block h3{font-size:1.18rem;margin-bottom:2px}
+.block .sub{margin:0 0 12px;color:var(--muted);font-size:.92rem}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.tile{border:2px solid var(--line);background:var(--card);border-radius:16px;padding:12px;cursor:pointer;text-align:left;transition:transform .1s,border-color .1s,background .2s;position:relative;display:flex;flex-direction:column}
+.tile:hover{border-color:var(--a);transform:translateY(-2px)}
+.tile .e{font-size:2.1rem;line-height:1.2}
+.tile .en{font-weight:600;font-size:1.06rem;line-height:1.25;margin-top:2px}
+.tile .zh{color:var(--muted);font-size:.86rem}
+.tile .ex{margin-top:8px;font-size:.8rem;color:var(--a-ink);background:var(--a-bg);border-radius:8px;padding:4px 8px;line-height:1.35}
+.tile:after{content:'🔊';position:absolute;top:10px;right:10px;font-size:.8rem;opacity:.45}
+.playing{border-color:var(--a)!important;background:var(--a-bg)!important}
+.dlg{display:grid;gap:10px}
+.qa{border:2px solid var(--line);border-radius:16px;padding:6px 8px;background:var(--card)}
+.line{display:flex;gap:10px;align-items:flex-start;padding:6px;cursor:pointer;border-radius:10px;background:none;border:0;width:100%;text-align:left}
+.line:hover{background:var(--card-2)}
+.who{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem;margin-top:1px}
+.who.q{background:var(--c3-bg);color:var(--c3-ink)}
+.who.a{background:var(--ok-bg);color:var(--ok)}
+.line .t{font-weight:600;font-size:1.05rem}
+.line .t b{color:var(--hl)}
+.line .zh,.sent .zh{display:block;font-weight:400;font-size:.86rem;color:var(--muted)}
+.hide-zh .line .zh,.hide-zh .sent .zh{display:none}
+.rule{background:var(--a-bg);color:var(--ink);border-radius:16px;padding:12px 14px;font-size:.98rem}
+.rule p+p,.rule p+table,.rule table+p{margin-top:8px}
+.rule ol{margin:0;padding-left:1.3em}
+.rule li+li{margin-top:6px}
+.rule .note{color:var(--a-ink);font-weight:500}
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:7px 8px;text-align:left;border-bottom:1px solid var(--line);font-size:.92rem;vertical-align:middle}
+.tbl th{background:var(--card-2);font-size:.82rem;color:var(--muted)}
+.ph{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.ph-group{border:2px solid var(--line);border-radius:16px;padding:10px;background:var(--card)}
+.ph-tag{font-weight:700;font-size:1.3rem;color:var(--a-ink);background:var(--a-bg);border-radius:10px;padding:0 12px;display:inline-block;margin-bottom:8px}
+.ph-words{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ph-w{display:flex;flex-direction:column;align-items:center;border:1px solid var(--line);background:var(--card-2);border-radius:12px;padding:6px 4px;cursor:pointer}
+.ph-w .pe{font-size:1.5rem;line-height:1.2}
+.ph-w .pw{font-size:1.25rem;font-weight:600}
+.ph-w .pz{font-size:.78rem;color:var(--muted)}
+.story{display:grid;gap:6px}
+.sent{display:block;text-align:left;width:100%;border:2px solid transparent;background:var(--card-2);padding:9px 12px;border-radius:12px;cursor:pointer;font-size:1.06rem;font-weight:500}
+.sent b{color:var(--hl)}
+.sent.main{border-color:var(--a);border-style:dashed}
+.sent .mark{font-size:.75rem;background:var(--a);color:var(--a-on);border-radius:999px;padding:1px 8px;margin-left:6px;font-weight:700;white-space:nowrap}
+.sent.reading{background:var(--a-bg);border-color:var(--a)}
+.ctry{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.ctry-c{border:2px solid var(--line);border-radius:16px;padding:10px;display:grid;gap:6px;align-content:start}
+.ctry-h{display:flex;align-items:center;gap:8px;font-weight:700}
+.ctry-h span{font-size:1.8rem}
+.ctry .sent{font-size:.98rem}
+.s4{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.s4c{border:2px solid var(--line);background:var(--card);border-radius:18px;padding:10px;cursor:pointer;text-align:left;display:grid;gap:6px}
+.s4c:hover{border-color:var(--a)}
+.s4t{font-size:1.05rem}
+.s4t b{font-size:1.3rem;color:var(--hl)}
+.s4t small{font-size:.8rem;background:var(--a-bg);color:var(--a-ink);border-radius:999px;padding:1px 8px;margin-left:4px;font-weight:600}
+.s4e{font-weight:600;color:var(--a-ink)}
+.poss{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.poss-c{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:8px 10px;cursor:pointer;text-align:left;display:grid;grid-template-columns:auto 1fr;gap:0 8px;align-items:center}
+.poss-c:hover{border-color:var(--a)}
+.poss-c .ps{font-size:.9rem;color:var(--muted)}
+.poss-c .pp{font-size:1.3rem;font-weight:700;color:var(--hl);grid-column:1}
+.poss-c .pz{font-size:.85rem;grid-column:2;grid-row:2}
+.poss-c .px{grid-column:1 / -1;font-size:.82rem;color:var(--a-ink)}
+.cta{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;margin-top:20px;z-index:5}
+.cta .btn{box-shadow:0 4px 0 var(--a-sh),0 10px 24px -6px rgba(15,23,42,.35)}
+
+/* scene (near / far) */
+.scene{display:flex;align-items:flex-end;gap:6px;padding:12px 14px 10px;border-radius:18px;background:linear-gradient(180deg,var(--card-2),var(--a-bg));border:2px solid var(--line);min-height:112px}
+.scene .kid{display:flex;flex-direction:column;align-items:center;flex:none}
+.scene .ke{font-size:2.6rem;line-height:1}
+.scene .kn{font-size:.72rem;font-weight:700;background:var(--card);border-radius:999px;padding:0 8px;border:1px solid var(--line)}
+.scene .hand{font-size:1.4rem;align-self:center;flex:none}
+.scene .path{flex:1;min-width:24px;border-bottom:3px dashed var(--muted);opacity:.45;margin-bottom:24px}
+.scene .grow{flex:1}
+.scene .spot{display:flex;flex-direction:column;align-items:center;flex:none}
+.scene .its{display:flex;gap:2px;line-height:1.1}
+.scene .near .its{font-size:2.4rem}
+.scene .far .its{font-size:1.45rem}
+.scene .dist{font-size:.7rem;font-weight:700;padding:0 8px;border-radius:999px;background:var(--card);border:1px solid var(--line);margin-top:4px;white-space:nowrap}
+.scene .tag{font-size:.75rem;font-weight:700;background:#FEF08A;color:#713F12;border-radius:6px;padding:1px 6px;margin-bottom:4px;white-space:nowrap}
+
+/* clock */
+.clockbox{display:flex;flex-direction:column;align-items:center;gap:8px}
+svg.clock{width:min(230px,66vw);height:auto;display:block}
+.clock .face{fill:var(--clock-face);stroke:var(--c1);stroke-width:8}
+.clock .tk{stroke:var(--tick);stroke-width:1.5;stroke-linecap:round}
+.clock .tk.b{stroke:var(--tick-big);stroke-width:3}
+.clock text{fill:var(--ink);font:600 17px 'Fredoka',system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
+.clock .hh{stroke:var(--hand-h);stroke-width:8;stroke-linecap:round}
+.clock .mh{stroke:var(--hand-m);stroke-width:5;stroke-linecap:round}
+.clock .hand{transform-origin:100px 100px;transition:transform .45s cubic-bezier(.3,1.3,.6,1)}
+.clock .pin{fill:var(--c1);stroke:var(--clock-face);stroke-width:2}
+.legend{font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:6px;border-radius:3px;vertical-align:middle;margin:0 4px 0 8px}
+.ctrls{display:grid;gap:8px}
+.ctrl{display:flex;align-items:center;gap:8px;justify-content:center}
+.ctrl span{font-weight:600;font-size:.92rem;min-width:84px;text-align:right}
+.ctrl button{width:48px;height:44px;border-radius:12px;border:2px solid var(--line);background:var(--card);cursor:pointer;font-size:1.3rem;font-weight:700;box-shadow:0 3px 0 var(--line)}
+.ctrl button:active{transform:translateY(2px);box-shadow:none}
+.clock-learn{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+.clock-side{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:240px;flex:1}
+.digital{font-size:2rem;font-weight:700;color:var(--a-ink);background:var(--a-bg);border-radius:16px;padding:4px 18px}
+.dzh{color:var(--muted);margin-top:-6px}
+.presets{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+
+/* quiz */
+.qbar{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+.track{flex:1;height:14px;border-radius:999px;background:var(--card-2);border:1px solid var(--line);overflow:hidden}
+.fill{height:100%;background:var(--a);border-radius:999px;transition:width .4s}
+.qcount{font-weight:700;font-size:.9rem;color:var(--muted);white-space:nowrap}
+.qcard{text-align:center;padding:20px 16px}
+.lead{font-size:2.6rem;line-height:1.25;margin-bottom:4px}
+.qtag{display:inline-block;font-weight:700;font-size:.95rem;background:var(--a-bg);color:var(--a-ink);border-radius:999px;padding:2px 12px;margin-bottom:6px}
+.prompt{font-size:1.4rem;font-weight:600;margin:10px 0 4px;line-height:1.35}
+.prompt.sm{font-size:1.05rem;color:var(--muted);font-weight:500}
+.blank{display:inline-block;min-width:64px;border-bottom:3px solid var(--a);margin:0 4px;color:var(--a-ink)}
+.qzh{color:var(--muted);margin:0 0 6px}
+.target{font-size:1.7rem;font-weight:700;color:var(--a-ink)}
+.big-listen{width:96px;height:96px;border-radius:50%;border:0;background:var(--a);color:var(--a-on);font-size:2.6rem;cursor:pointer;box-shadow:0 6px 0 var(--a-sh);margin:6px auto 0;display:grid;place-items:center}
+.big-listen:active{transform:translateY(4px);box-shadow:0 2px 0 var(--a-sh)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.opts.long{grid-template-columns:1fr}
+@media (max-width:520px){.opts:not(.pics){grid-template-columns:1fr}}
+.opt{border:2px solid var(--line);background:var(--card);border-radius:16px;padding:13px 12px;font-weight:600;font-size:1.08rem;cursor:pointer;box-shadow:0 4px 0 var(--line);transition:transform .08s}
+.opt:hover{border-color:var(--a)}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);box-shadow:0 4px 0 var(--ok)}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);box-shadow:0 4px 0 var(--bad)}
+.opts.done .opt{cursor:default}
+.opts.done .opt:not(.ok):not(.bad){opacity:.45}
+.pics .opt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px}
+.pics .pe{font-size:3rem;line-height:1.1}
+.pics .pl{font-size:.92rem;visibility:hidden}
+.opts.done .pl{visibility:visible}
+.fb{margin-top:16px;border-radius:18px;padding:14px 16px;text-align:left;animation:pop .25s ease-out}
+.fb.ok{background:var(--ok-bg);border:2px solid var(--ok)}
+.fb.bad{background:var(--bad-bg);border:2px solid var(--bad)}
+.fb-h{font-weight:700;font-size:1.12rem}
+.fb.ok .fb-h{color:var(--ok)}
+.fb.bad .fb-h{color:var(--bad)}
+.fb-ans{font-weight:600;font-size:1.1rem;margin:6px 0}
+.fb-why{font-size:.96rem}
+.fb .btn{margin-top:12px;width:100%}
+.ans-line{min-height:64px;border:2px dashed var(--line);border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:14px 0 12px;background:var(--card-2)}
+.ans-line.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ans-line.bad{border-color:var(--bad);background:var(--bad-bg)}
+.ans-hint{color:var(--muted);font-size:.92rem}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:50px}
+.wt{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:8px 14px;font-weight:600;font-size:1.1rem;cursor:pointer;box-shadow:0 3px 0 var(--line)}
+.ans-line .wt{background:var(--a-bg);border-color:var(--a);color:var(--a-ink);box-shadow:0 3px 0 var(--a-sh)}
+.wt.used{visibility:hidden}
+.sort-stage{min-height:150px;display:flex;flex-direction:column;align-items:center}
+.sort-item{display:inline-flex;flex-direction:column;align-items:center;gap:0;padding:12px 26px;border-radius:20px;background:var(--card);border:3px solid var(--a);box-shadow:0 5px 0 var(--a-sh);margin:8px auto 6px;cursor:pointer;animation:pop .25s ease-out}
+.sort-item .e{font-size:2.5rem;line-height:1.2}
+.sort-item .w{font-size:1.6rem;font-weight:700}
+.sort-item small{color:var(--muted);font-size:.78rem}
+.sort-count{font-size:.85rem;color:var(--muted)}
+.bins{display:grid;gap:10px;grid-template-columns:repeat(var(--n),1fr);margin-top:10px}
+.bin{border:2px dashed var(--a);background:var(--a-bg);border-radius:18px;padding:12px 6px;cursor:pointer;color:var(--a-ink);min-height:118px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bin:hover{border-style:solid}
+.bin .bt{font-size:1.4rem;font-weight:700;line-height:1.2}
+.bin .bs{font-size:.8rem}
+.bin .got{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:4px}
+.bin .got span{font-size:.88rem;background:var(--card);color:var(--ink);border-radius:8px;padding:1px 7px}
+.sort-msg{min-height:1.6em;margin-top:10px;font-weight:600}
+.sort-msg.ok{color:var(--ok)}
+.sort-msg.bad{color:var(--bad)}
+.center{text-align:center}
+.big-e{font-size:3.4rem;line-height:1.2}
+
+/* result */
+.big-stars{font-size:3.4rem;letter-spacing:6px;margin:4px 0}
+.big-stars span{display:inline-block;color:var(--star-off);transform:scale(0);animation:starIn .5s forwards}
+.big-stars span.on{color:var(--star)}
+.big-stars span:nth-child(2){animation-delay:.25s}
+.big-stars span:nth-child(3){animation-delay:.5s}
+.score{font-size:1.1rem;font-weight:600}
+.review{text-align:left;margin-top:16px}
+.review h4{font-size:1rem;margin-bottom:6px}
+.review ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.review li{background:var(--card-2);border-radius:12px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.review .mq{color:var(--muted);font-size:.9rem;flex:1 1 100%}
+.review .ma{font-weight:600;color:var(--ok)}
+.unlock{display:inline-block;margin-top:10px;background:var(--c5-bg);color:var(--c5-ink);border-radius:999px;padding:4px 14px;font-weight:600}
+
+/* certificate */
+.cert{border:6px double var(--c1-sh);border-radius:26px;padding:28px 18px;text-align:center;background:linear-gradient(135deg,var(--c1-bg),var(--card) 55%,var(--c3-bg));margin-top:16px}
+.cert .k{letter-spacing:.18em;text-transform:uppercase;font-size:.8rem;color:var(--muted);font-weight:600}
+.cert h2{font-size:2rem;margin:6px 0}
+.cert .name{font-size:2.8rem;font-weight:700;color:var(--c4-ink);border-bottom:3px solid var(--c1);display:inline-block;padding:0 24px;margin:6px 0 10px;line-height:1.2}
+.cert .lvls{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0}
+.cert .lvls span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.88rem}
+.cert .total{font-size:1.4rem;font-weight:700;color:var(--c1-ink)}
+.cert .d{color:var(--muted);font-size:.9rem;margin-top:8px}
+
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;transition:all .25s;pointer-events:none;z-index:60;max-width:calc(100% - 32px);text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+.shake{animation:shake .45s}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes starIn{60%{transform:scale(1.25)}to{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){*,*:before{animation:none!important;transition:none!important}.big-stars span{transform:none}}
+@media print{
+  .topbar,.no-print,#toast{display:none!important}
+  body{background:#fff}
+  .cert{margin:0;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="in">
+    <button class="brand" data-act="map" aria-label="回到關卡地圖">
+      <span class="logo" aria-hidden="true">🐧</span>
+      <span><b id="brandName">Miller's English Adventure</b><small>Unit 1–2 英語闖關・5 個關卡</small></span>
+    </button>
+    <span class="spacer"></span>
+    <span class="pill" title="星星總數">⭐ <b id="starNum">0</b>/15</span>
+    <button class="tbtn" id="speedBtn" data-act="speed" title="朗讀速度">🙂</button>
+    <button class="tbtn" id="soundBtn" data-act="sound" title="音效開關">🔔</button>
+  </div>
+</header>
+<main id="app" class="wrap"><noscript>請開啟 JavaScript 才能開始闖關。</noscript></main>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ===== 學習者名字：要換人，只要改這一行 ===== */
+const LEARNER = 'Miller';
+/* 線上分享版不能開列印視窗，會改成 false */
+const CAN_PRINT = true;
+
+/* ===================== helpers ===================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const plain = s => String(s).replace(/[\[\]*]/g, '');
+const hl = s => esc(s).replace(/\[([^\]]+)\]/g, '<b>$1</b>');
+const md = s => esc(s).replace(/\*([^*]+)\*/g, '<b>$1</b>');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.random() * a.length | 0];
+const pad = m => String(m).padStart(2, '0');
+const BOTTLE = '<svg class="ico" viewBox="0 0 32 48" aria-label="water bottle"><rect x="11" y="1" width="10" height="8" rx="2" fill="#0369A1"/><rect x="6" y="8" width="20" height="38" rx="7" fill="#7DD3FC" stroke="#0369A1" stroke-width="2"/><rect x="7" y="23" width="18" height="11" fill="#38BDF8"/></svg>';
+const ico = s => String(s).replace(/BOTTLE/g, BOTTLE);
+
+/* ===================== save ===================== */
+const STORE = 'miller-english-adventure-v1';
+let save = { best: {}, rate: 0.85, sound: true, unlockAll: false };
+try { const s = JSON.parse(localStorage.getItem(STORE)); if (s && typeof s === 'object') save = Object.assign(save, s); } catch (e) {}
+const persist = () => { try { localStorage.setItem(STORE, JSON.stringify(save)); } catch (e) {} };
+const totalStars = () => [1, 2, 3, 4, 5].reduce((s, n) => s + (save.best[n] || 0), 0);
+const isOpen = n => n === 1 || !!save.best[n - 1] || save.unlockAll;
+
+/* ===================== speech (English only) ===================== */
+const TTS = {
+  ok: 'speechSynthesis' in window, voice: null, token: 0,
+  pick() {
+    try {
+      const vs = speechSynthesis.getVoices();
+      const us = vs.filter(v => /^en[-_]US/i.test(v.lang));
+      this.voice = us.find(v => /Google US English|Samantha|Aria|Jenny|Ava|Natural/i.test(v.name)) || us[0] || vs.find(v => /^en/i.test(v.lang)) || null;
+    } catch (e) {}
+  },
+  clean: t => String(t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '').replace(/[*\[\]]/g, '').replace(/…/g, ' ').replace(/\s+/g, ' ').trim(),
+  utter(text) { const u = new SpeechSynthesisUtterance(this.clean(text)); u.lang = 'en-US'; if (this.voice) u.voice = this.voice; u.rate = save.rate; u.pitch = 1.05; return u; },
+  say(text) { if (!this.ok || !text) return; this.token++; $$('.reading').forEach(n => n.classList.remove('reading')); speechSynthesis.cancel(); speechSynthesis.speak(this.utter(text)); },
+  sayList(list, onStep) {
+    if (!this.ok) return;
+    speechSynthesis.cancel(); $$('.reading').forEach(n => n.classList.remove('reading'));
+    const tk = ++this.token; let i = 0;
+    const next = () => {
+      if (tk !== this.token) return;
+      if (i >= list.length) { onStep(-1); return; }
+      onStep(i);
+      const u = this.utter(list[i++]);
+      u.onend = () => setTimeout(next, 280);
+      u.onerror = () => { if (tk === this.token) onStep(-1); };
+      speechSynthesis.speak(u);
+    };
+    next();
+  }
+};
+if (TTS.ok) { TTS.pick(); speechSynthesis.onvoiceschanged = () => TTS.pick(); }
+
+/* ===================== sound fx ===================== */
+const SFX = {
+  ctx: null,
+  tone(f, type, d, delay = 0, vol = 0.16) {
+    if (!save.sound) return;
+    try {
+      this.ctx = this.ctx || new (window.AudioContext || window.webkitAudioContext)();
+      const c = this.ctx; if (c.state === 'suspended') c.resume();
+      const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + delay;
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + d);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d + 0.02);
+    } catch (e) {}
+  },
+  good() { [523, 659, 784].forEach((f, i) => this.tone(f, 'triangle', 0.18, i * 0.08)); },
+  bad() { this.tone(300, 'sine', 0.18); this.tone(220, 'sine', 0.25, 0.12); },
+  pop() { this.tone(720, 'sine', 0.07, 0, 0.1); },
+  fanfare() { [523, 659, 784, 1047, 784, 1047].forEach((f, i) => this.tone(f, 'triangle', 0.22, i * 0.11)); }
+};
+
+function confetti(n = 90) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.createElement('canvas'); c.className = 'confetti'; document.body.appendChild(c);
+  const ctx = c.getContext('2d'), W = c.width = innerWidth, H = c.height = innerHeight;
+  const cols = ['#F59E0B', '#38BDF8', '#34D399', '#F43F5E', '#A78BFA', '#FACC15'];
+  const ps = Array.from({ length: n }, () => ({ x: W / 2 + (Math.random() - 0.5) * W * 0.35, y: H * 0.6, vx: (Math.random() - 0.5) * 13, vy: -Math.random() * 13 - 6, r: Math.random() * 6 + 5, c: pick(cols), a: Math.random() * 6, va: (Math.random() - 0.5) * 0.3 }));
+  let t = 0;
+  (function f() {
+    ctx.clearRect(0, 0, W, H);
+    ps.forEach(p => { p.vy += 0.42; p.x += p.vx; p.y += p.vy; p.vx *= 0.99; p.a += p.va; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); ctx.restore(); });
+    if (++t < 110) requestAnimationFrame(f); else c.remove();
+  })();
+}
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2400); }
+
+/* ===================== clock ===================== */
+const r1 = n => Math.round(n * 10) / 10;
+const norm = t => ((t % 720) + 720) % 720;
+const fmtT = t => { t = norm(t); return `${Math.floor(t / 60) || 12}:${pad(t % 60)}`; };
+const zhT = t => { t = norm(t); const h = Math.floor(t / 60) || 12, m = t % 60; return `${h} 點${m === 0 ? '整' : m === 30 ? '半' : ` ${m} 分`}`; };
+function clockSVG(t, id = '') {
+  let s = `<svg class="clock"${id ? ` id="${id}"` : ''} viewBox="0 0 200 200" role="img" aria-label="時鐘"><circle class="face" cx="100" cy="100" r="92"/>`;
+  for (let i = 0; i < 60; i++) { const a = i * Math.PI / 30, b = i % 5 === 0, rr = b ? 74 : 80; s += `<line class="tk${b ? ' b' : ''}" x1="${r1(100 + 86 * Math.sin(a))}" y1="${r1(100 - 86 * Math.cos(a))}" x2="${r1(100 + rr * Math.sin(a))}" y2="${r1(100 - rr * Math.cos(a))}"/>`; }
+  for (let n = 1; n <= 12; n++) { const a = n * Math.PI / 6; s += `<text x="${r1(100 + 61 * Math.sin(a))}" y="${r1(100 - 61 * Math.cos(a))}">${n}</text>`; }
+  s += `<line class="hand hh" x1="100" y1="110" x2="100" y2="55" style="transform:rotate(${t / 2}deg)"/><line class="hand mh" x1="100" y1="114" x2="100" y2="28" style="transform:rotate(${t * 6}deg)"/><circle class="pin" cx="100" cy="100" r="7"/></svg>`;
+  return s;
+}
+const setHands = (svg, t) => { if (!svg) return; svg.querySelector('.hh').style.transform = `rotate(${t / 2}deg)`; svg.querySelector('.mh').style.transform = `rotate(${t * 6}deg)`; };
+const nearest = (cur, target) => { let d = norm(target - cur); if (d > 360) d -= 720; return cur + d; };
+const LEGEND = '<div class="legend"><i style="background:var(--hand-h)"></i>短針＝時<i style="background:var(--hand-m)"></i>長針＝分</div>';
+const CTRLS = act => `<div class="ctrls"><div class="ctrl"><span>短針（時）</span><button data-act="${act}" data-d="-60" aria-label="時針倒轉一小時">↺</button><button data-act="${act}" data-d="60" aria-label="時針順轉一小時">↻</button></div><div class="ctrl"><span>長針（分）</span><button data-act="${act}" data-d="-5" aria-label="分針倒轉五分鐘">↺</button><button data-act="${act}" data-d="5" aria-label="分針順轉五分鐘">↻</button></div></div>`;
+
+/* scene: near / far, singular / plural */
+function sceneHTML(sc) {
+  const its = Array.from({ length: sc.n }, () => `<span>${ico(sc.item)}</span>`).join('');
+  const spot = `<div class="spot ${sc.far ? 'far' : 'near'}">${sc.tag ? `<span class="tag">🏷️ ${esc(sc.tag)}</span>` : ''}<div class="its">${its}</div><span class="dist">${sc.far ? '遠 far' : '近 near'}</span></div>`;
+  return `<div class="scene"><div class="kid"><span class="ke">🧒</span><span class="kn">${LEARNER}</span></div>${sc.far ? `<span class="hand">👉</span><div class="path"></div>${spot}` : `${spot}<div class="grow"></div>`}</div>`;
+}
+
+/* ===================== curriculum data ===================== */
+const ROUTINES = [
+  { e: '⏰', en: 'wake up', zh: '起床、醒來', ex: 'I wake up at 6:00 in the morning.' },
+  { e: '🍳', en: 'have breakfast', zh: '吃早餐', ex: "It's 7:00. Time to have breakfast." },
+  { e: '🍱', en: 'have lunch', zh: '吃午餐', ex: 'What time do you have lunch?' },
+  { e: '🍲', en: 'have dinner', zh: '吃晚餐', ex: 'I have dinner at 5:30 in the evening.' },
+  { e: '🚿', en: 'take a shower', zh: '洗澡、沖澡', ex: 'Time to take a shower.' },
+  { e: '👕', en: 'get dressed', zh: '穿好衣服', ex: "It's late. It's time to get dressed!" },
+  { e: '🪥', en: 'brush my teeth', zh: '刷牙', ex: 'I am brushing my teeth.' },
+  { e: '💇', en: 'comb my hair', zh: '梳頭髮', ex: 'He combs his hair every morning.' },
+  { e: '📝', en: 'do my homework', zh: '寫功課', ex: "It's time to do my homework." },
+  { e: '🧹', en: 'clean my room', zh: '整理房間', ex: 'He cleans his room at 9:45 at night.' },
+  { e: '🏫', en: 'arrive at school', zh: '抵達學校', ex: 'I arrive at school at 8:00 in the morning.' },
+  { e: '💬', en: 'chat with friends', zh: '和朋友聊天', ex: 'Time to chat with friends.' }
+];
+const ITEMS = [
+  { e: '🏫', en: 'classroom', pl: 'classrooms', zh: '教室' },
+  { e: '👛', en: 'wallet', pl: 'wallets', zh: '皮夾、錢包' },
+  { e: '🔑', en: 'key', pl: 'keys', zh: '鑰匙' },
+  { e: '⌚', en: 'watch', pl: 'watches', zh: '手錶' },
+  { e: '📱', en: 'smartphone', pl: 'smartphones', zh: '智慧型手機' },
+  { e: '📓', en: 'notebook', pl: 'notebooks', zh: '筆記本' },
+  { e: '🍱', en: 'lunch box', pl: 'lunch boxes', zh: '便當盒、午餐盒' },
+  { e: '☂️', en: 'umbrella', pl: 'umbrellas', zh: '雨傘' },
+  { e: 'BOTTLE', en: 'water bottle', pl: 'water bottles', zh: '水壺、水瓶' },
+  { e: '📎', en: 'paper clip', pl: 'paper clips', zh: '迴紋針' },
+  { e: '🖍️', en: 'colored pencil', pl: 'colored pencils', zh: '彩色鉛筆' },
+  { e: '👓', en: 'glasses', pl: null, zh: '眼鏡' }
+];
+const S4 = [
+  { w: 'this', zh: '這個', d: '近・單數', sc: { item: '⌚', n: 1, far: 0 }, ex: 'This is my watch.' },
+  { w: 'that', zh: '那個', d: '遠・單數', sc: { item: '☂️', n: 1, far: 1 }, ex: 'That is my umbrella.' },
+  { w: 'these', zh: '這些', d: '近・複數', sc: { item: '🔑', n: 3, far: 0 }, ex: 'These are my keys.' },
+  { w: 'those', zh: '那些', d: '遠・複數', sc: { item: '📓', n: 2, far: 1 }, ex: 'Those are my notebooks.' }
+];
+const POSS = [
+  ['I', '我', 'my', '我的', 'my wallet'], ['you', '你', 'your', '你的', 'your watch'],
+  ['he', '他', 'his', '他的', 'his keys'], ['she', '她', 'her', '她的', 'her smartphone'],
+  ['it', '它', 'its', '它的', 'its cage'], ['we', '我們', 'our', '我們的', 'our classroom'],
+  ['you', '你們', 'your', '你們的', 'your notebooks'], ['they', '他們', 'their', '他們的', 'their colored pencils']
+];
+const VERBS = [
+  ['get', 'get[s]', '大部分加 s'], ['clean', 'clean[s]', '加 s'], ['wake up', 'wake[s] up', '加 s'],
+  ['comb', 'comb[s]', '加 s'], ['brush', 'brush[es]', 'sh 結尾加 es'], ['have', '[has]', '特別變身！']
+];
+const chip = (t, say) => `<button class="chip" data-say="${esc(say || plain(t))}">${hl(t)}</button>`;
+
+const LEVELS = [
+  /* ---------------- Level 1 ---------------- */
+  {
+    n: 1, unit: 'Unit 1', icon: '⏰', title: '時間魔法', en: 'What Time Is It?',
+    sub: '看時鐘說時間・時段片語・12 個日常作息',
+    learn: [
+      { k: 'clock', title: '⏰ What time is it? 現在幾點？', sub: "點下面的時間，或用 ↺ ↻ 轉動指針，聽聽英文怎麼說。回答句型：It's ＋ 時間.", presets: ['2:00', '6:00', '7:30', '12:05', '6:50', '9:45'] },
+      { k: 'cards', title: '🌗 一天的時段', sub: '幾點用 at（at 6:00）；早上、下午、傍晚用 in the…；中午和夜間要用 at！', items: [
+        { e: '🌅', en: 'in the morning', zh: '在早上／上午' },
+        { e: '🕛', en: 'at noon', zh: '在中午' },
+        { e: '☀️', en: 'in the afternoon', zh: '在下午' },
+        { e: '🌇', en: 'in the evening', zh: '在傍晚／晚上' },
+        { e: '🌙', en: 'at night', zh: '在夜間' }] },
+      { k: 'cards', title: '🗓️ 12 個日常作息', sub: '點卡片聽片語，點下方例句聽整句，跟著大聲念！', items: ROUTINES },
+      { k: 'lines', title: "🔔 It's time to… 該做某事了！", sub: "句型：It's time to ＋ 動作。點句子聽聽看。", items: [
+        ["It's late. It's time to *get dressed*!", '很晚了，該穿衣服了！'],
+        ["It's 7:00. Time to *have breakfast*.", '七點了，該吃早餐了。'],
+        ["It's time to *do my homework*.", '該寫功課了。'],
+        ['Time to *go to bed*, sleepy head!', '該睡覺囉，貪睡蟲！']] }
+    ],
+    quiz: [
+      { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [7, 30], o: ["It's 7:30.", "It's 6:30.", "It's 7:00.", "It's 6:35."], why: '短針（時針）走到 7 和 8 中間，長針（分針）指著 6 ＝ 30 分 → 7:30 七點半。' },
+      { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [2, 0], o: ["It's 2:00.", "It's 12:10.", "It's 3:00.", "It's 12:02."], why: '長針指著 12 ＝ 整點；短針指著 2 → 2:00 兩點整。' },
+      { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [6, 50], o: ["It's 6:50.", "It's 7:50.", "It's 10:30.", "It's 6:10."], why: '短針快到 7 了，但還沒到，所以還是 6 點；長針指著 10 ＝ 50 分 → 6:50。' },
+      { type: 'clock', h: 7, m: 15, why: '長針（分）指著 3 ＝ 15 分；短針（時）在 7 和 8 之間、靠近 7。' },
+      { type: 'listen', pics: 1, say: 'take a shower', o: [{ e: '🚿', t: 'take a shower' }, { e: '🍳', t: 'have breakfast' }, { e: '🪥', t: 'brush my teeth' }, { e: '🏫', t: 'arrive at school' }], why: 'take a shower ＝ 洗澡 🚿' },
+      { type: 'listen', pics: 1, say: 'do my homework', o: [{ e: '📝', t: 'do my homework' }, { e: '🧹', t: 'clean my room' }, { e: '💬', t: 'chat with friends' }, { e: '💇', t: 'comb my hair' }], why: 'do my homework ＝ 寫功課 📝' },
+      { type: 'choice', lead: '🕛 🍱', p: 'I have lunch ___.', o: ['at noon', 'in the evening', 'at night', 'in the morning'], full: 'I have lunch at noon.', why: '中午 12 點 → at noon（在中午）。' },
+      { type: 'choice', lead: '🌙 🧹', tag: '9:45', p: 'He cleans his room at 9:45 ___.', o: ['at night', 'in the morning', 'at noon', 'in the afternoon'], full: 'He cleans his room at 9:45 at night.', why: '晚上 9:45 是夜間 → at night。注意 night 前面用 at，不是 in！' },
+      { type: 'choice', lead: '👕 😱', p: "It's late! It's time to ___.", o: ['get dressed', 'take a shower', 'have dinner', 'do my homework'], full: "It's late! It's time to get dressed!", why: "It's time to ＋ 動作 ＝ 該做某事了。圖片是衣服 👕 → get dressed（穿好衣服）。" },
+      { type: 'order', w: ['I', 'wake up', 'at', '6:00', 'in the morning.'], zh: '我早上六點起床。', why: '句子順序：我（I）＋ 做什麼（wake up）＋ at 幾點 ＋ 時段。' },
+      { type: 'order', w: ["It's", 'time', 'to', 'have', 'breakfast.'], zh: '該吃早餐了。', why: "It's time to ＋ 動作：該做某事了。" }
+    ]
+  },
+  /* ---------------- Level 2 ---------------- */
+  {
+    n: 2, unit: 'Unit 1', icon: '🌞', title: `${LEARNER} 的一天`, en: `${LEARNER}'s Day`,
+    sub: 'do / does・動詞加 s・Long a 發音・各國時間文化',
+    learn: [
+      { k: 'dialog', title: '💬 What time do you…?', sub: '問「你」幾點做某事 → 用 do；回答用 I ＋ 原形動作。', pairs: [
+        ['What time *do* you wake up?', '你幾點起床？', 'I *wake up* at 6:00 in the morning.', '我早上六點起床。'],
+        ['What time *do* you take a shower?', '你幾點洗澡？', 'I *take a shower* at 7:30 in the morning.', '我早上七點半洗澡。']] },
+      { k: 'dialog', title: `🧒 What time does ${LEARNER}…?`, sub: `問「一個人」（${LEARNER} / he / she）→ 用 does；回答時動詞要加 s！`, pairs: [
+        [`What time *does* ${LEARNER} get dressed?`, `${LEARNER} 幾點穿衣服？`, `${LEARNER} *gets* dressed at 7:15 in the morning.`, `${LEARNER} 早上七點十五分穿好衣服。`],
+        [`What time *does* ${LEARNER} have dinner?`, `${LEARNER} 幾點吃晚餐？`, `${LEARNER} *has* dinner at 6:00 in the evening.`, `${LEARNER} 傍晚六點吃晚餐。`],
+        ['What time *does* he clean his room?', '他幾點整理房間？', 'He *cleans* his room at 9:45 at night.', '他晚上九點四十五分整理房間。'],
+        ['What time *does* she brush her teeth?', '她幾點刷牙？', 'She *brushes* her teeth at 6:30 in the morning.', '她早上六點半刷牙。']] },
+      { k: 'verbs', title: '✨ 動詞變身規則（第三人稱單數）', sub: `主角是 ${LEARNER}、he、she（一個人）時，動詞要變身！` },
+      { k: 'phonics', title: '🔤 Phonics：Long a /eɪ/', sub: 'ai、ay、a_e 都唸成字母 A 的聲音。點單字聽發音！', groups: [
+        { tag: 'ai', words: [['r[ai]n', '雨', '🌧️'], ['p[ai]nt', '油漆、顏料', '🎨'], ['tr[ai]n', '火車', '🚆'], ['p[ai]n', '疼痛', '🤕']] },
+        { tag: 'ay', words: [['b[ay]', '海灣', '⛵'], ['h[ay]', '乾草', '🌾'], ['pl[ay]', '玩', '🎮'], ['l[ay]', '放置', '🥚']] },
+        { tag: 'a_e', words: [['l[a]t[e]', '遲到的', '⏰'], ['c[a]g[e]', '籠子', '🐦'], ['h[a]t[e]', '討厭', '😠'], ['c[a]k[e]', '蛋糕', '🎂']] }] },
+      { k: 'countries', title: '🌍 閱讀：Am I Late? 我遲到了嗎？', sub: '不同國家，對「時間」的想法不一樣！點句子聽朗讀。', items: [
+        { e: '🥨', name: 'Germany 德國', lines: [['In Germany, people *arrive early*.', '在德國，人們習慣提早到。'], ['The party is at 8:00. Arrive at 7:50.', '派對八點開始，七點五十分就到。'], ['Arriving on time is *not polite*!', '剛好準時到，反而不太禮貌！']] },
+        { e: '⚽', name: 'Brazil 巴西', lines: [['In Brazil, people *arrive late*.', '在巴西，人們習慣晚點到。'], ['The party is at 6:00. You arrive at 6:00.', '派對六點開始，你六點就到了。'], ['Oh no! You are *alone*!', '糟糕！只有你一個人！']] },
+        { e: '🐪', name: 'Saudi Arabia 沙烏地阿拉伯', lines: [['In Saudi Arabia, people *take their time*.', '在沙烏地阿拉伯，人們喜歡慢慢來。'], ["Don't *look at your watch*.", '不要一直看手錶。'], ["It's *rude*!", '那樣很不禮貌！']] }] }
+    ],
+    quiz: [
+      { type: 'choice', p: `What time ___ ${LEARNER} get dressed?`, o: ['does', 'do', 'is', 'are'], full: `What time does ${LEARNER} get dressed?`, why: `${LEARNER} 是「一個人」（第三人稱單數）→ 問句用 does。I / you 才用 do。` },
+      { type: 'choice', lead: '🧒 👕', tag: '7:15', p: `${LEARNER} ___ dressed at 7:15 in the morning.`, o: ['gets', 'get', 'getting', 'is get'], full: `${LEARNER} gets dressed at 7:15 in the morning.`, why: `${LEARNER} 是第三人稱單數，肯定句的動詞要加 s：get → gets。` },
+      { type: 'choice', lead: '🍲', tag: '6:00', p: 'She ___ dinner at 6:00 in the evening.', o: ['has', 'have', 'haves', 'having'], full: 'She has dinner at 6:00 in the evening.', why: 'have 是特別變身：He / She ＋ has。' },
+      { type: 'choice', lead: '🪥', p: 'He ___ his teeth every morning.', o: ['brushes', 'brushs', 'brush', 'brushing'], full: 'He brushes his teeth every morning.', why: '字尾是 sh 的動詞要加 es：brush → brushes。' },
+      { type: 'choice', clock: [6, 0], p: `What time does ${LEARNER} wake up?`, say: `What time does ${LEARNER} wake up?`, o: [`${LEARNER} wakes up at 6:00 in the morning.`, `${LEARNER} wake up at 6:00 in the morning.`, `${LEARNER} wakes up at 6:00 at night.`, `${LEARNER} wakes up in 6:00 in the morning.`], why: `${LEARNER} → wakes（加 s）；幾點用 at 6:00；早上用 in the morning。` },
+      { type: 'order', w: ['What time', 'does', LEARNER, 'have', 'lunch?'], zh: `${LEARNER} 幾點吃午餐？`, why: '問句用 does 時，後面的動詞要用原形 have（不是 has）。' },
+      { type: 'listen', say: 'paint', o: ['paint', 'pain', 'play', 'cake'], why: 'p-ai-n-t：ai 唸長音 /eɪ/，最後還有 t 的聲音。' },
+      { type: 'sort', p: '這些字都唸 Long a /eɪ/，它們是哪一種拼法？', hint: '仔細看拼字：字裡有 ai？ay？還是 a＿e（a 和 e 中間隔一個字母）？', bins: [{ k: 'ai', t: 'ai' }, { k: 'ay', t: 'ay' }, { k: 'a_e', t: 'a_e' }], items: [{ t: 'r[ai]n', e: '🌧️', b: 'ai' }, { t: 'pl[ay]', e: '🎮', b: 'ay' }, { t: 'c[a]k[e]', e: '🎂', b: 'a_e' }, { t: 'tr[ai]n', e: '🚆', b: 'ai' }, { t: 'h[ay]', e: '🌾', b: 'ay' }, { t: 'l[a]t[e]', e: '⏰', b: 'a_e' }] },
+      { type: 'choice', lead: '🥨', tag: 'Germany 德國', p: 'The party is at 8:00. When do you arrive?', say: 'In Germany, the party is at 8:00. When do you arrive?', o: ['At 7:50.', 'At 8:30.', 'At 9:00.', 'At 8:15.'], full: 'In Germany, arrive at 7:50.', why: '德國人習慣提早到：約 8:00，最好 7:50 就到。剛好準時到反而不夠禮貌！' },
+      { type: 'choice', lead: '⚽', tag: 'Brazil 巴西', p: 'The party is at 6:00. You arrive at 6:00. You are ___!', o: ['alone', 'rude', 'early', 'busy'], full: 'You are alone!', why: '巴西人習慣晚點到。6:00 準時到的話，可能只有你一個人（alone）！' },
+      { type: 'choice', lead: '🐪', tag: 'Saudi Arabia 沙烏地阿拉伯', p: "In Saudi Arabia, it's rude to ___.", o: ['look at your watch', 'take your time', 'chat with friends', 'have dinner'], full: "In Saudi Arabia, it's rude to look at your watch.", why: '沙烏地阿拉伯的人喜歡慢慢來（take their time），和人相處時一直看手錶很不禮貌（rude）。' }
+    ]
+  },
+  /* ---------------- Level 3 ---------------- */
+  {
+    n: 3, unit: 'Unit 2', icon: '🎒', title: '教室尋寶', en: 'Classroom Hunt',
+    sub: '12 個隨身物品・this / that / these / those・單複數',
+    learn: [
+      { k: 'items', title: '🎒 12 個教室與隨身物品', sub: '點卡片聽單字，點下方聽「一個 → 兩個」怎麼說。' },
+      { k: 'scene4', title: '👉 this・that・these・those', sub: `看東西離 ${LEARNER} 近還是遠？是一個還是很多個？點卡片聽句子。` },
+      { k: 'rule', title: "💡 It's… 還是 They're…？", html:
+        `<p>☝️ 單數（一個）→ ${chip("It's my wallet.")}</p>
+         <p>✌️ 複數（兩個以上）→ ${chip("They're my keys.")}</p>
+         <p>👓 <b>glasses</b> 眼鏡永遠是複數 → ${chip("They're my glasses.")}</p>
+         <p>📝 複數通常加 <b>s</b>：key → key<b>s</b>；字尾是 ch、x 加 <b>es</b>：watch → watch<b>es</b>、lunch box → lunch box<b>es</b>。</p>` }
+    ],
+    quiz: [
+      { type: 'listen', pics: 1, say: 'umbrella', o: [{ e: '☂️', t: 'umbrella' }, { e: '⌚', t: 'watch' }, { e: '🔑', t: 'key' }, { e: '📓', t: 'notebook' }], why: 'umbrella ＝ 雨傘 ☂️' },
+      { type: 'listen', pics: 1, say: 'smartphone', o: [{ e: '📱', t: 'smartphone' }, { e: '👛', t: 'wallet' }, { e: '📎', t: 'paper clip' }, { e: '👓', t: 'glasses' }], why: 'smartphone ＝ 智慧型手機 📱' },
+      { type: 'listen', pics: 1, say: 'water bottle', o: [{ e: 'BOTTLE', t: 'water bottle' }, { e: '🍱', t: 'lunch box' }, { e: '🖍️', t: 'colored pencils' }, { e: '🏫', t: 'classroom' }], why: 'water bottle ＝ 水壺' },
+      { type: 'choice', lead: '👛', p: 'What is it?', zh: '這是什麼？', o: ['wallet', 'watch', 'water bottle', 'notebook'], full: "It's a wallet.", why: 'wallet ＝ 皮夾、錢包 👛' },
+      { type: 'choice', scene: { item: '⌚', n: 1, far: 0 }, p: '___ is my watch.', o: ['This', 'That', 'These', 'Those'], full: 'This is my watch.', why: '一個（單數）＋ 在身邊（近）→ This。' },
+      { type: 'choice', scene: { item: '🔑', n: 3, far: 1 }, p: '___ are my keys.', o: ['Those', 'These', 'This', 'That'], full: 'Those are my keys.', why: '很多個（複數）＋ 離得遠 → Those。' },
+      { type: 'choice', scene: { item: '📓', n: 2, far: 0 }, p: '___ are my notebooks.', o: ['These', 'Those', 'This', 'That'], full: 'These are my notebooks.', why: '很多個（複數）＋ 近 → These。' },
+      { type: 'choice', scene: { item: '☂️', n: 1, far: 1 }, p: '___ is my umbrella.', o: ['That', 'This', 'These', 'Those'], full: 'That is my umbrella.', why: '一個（單數）＋ 遠 → That。' },
+      { type: 'choice', lead: '👓', p: "Look! ___ my glasses.", o: ["They're", "It's", 'This', 'That'], full: "Look! They're my glasses.", why: "glasses（眼鏡）永遠是複數，所以用 They're。" },
+      { type: 'sort', p: "單數用 It's…，複數用 They're…，請分類！", hint: '看字尾有沒有 s？別忘了 glasses 永遠是複數！', bins: [{ k: 's', t: "It's…", sub: '單數・一個' }, { k: 'p', t: "They're…", sub: '複數・兩個以上' }], items: [{ t: 'wallet', e: '👛', b: 's' }, { t: 'keys', e: '🔑', b: 'p' }, { t: 'glasses', e: '👓', b: 'p' }, { t: 'smartphone', e: '📱', b: 's' }, { t: 'colored pencils', e: '🖍️', b: 'p' }, { t: 'umbrella', e: '☂️', b: 's' }] }
+    ]
+  },
+  /* ---------------- Level 4 ---------------- */
+  {
+    n: 4, unit: 'Unit 2', icon: '🔍', title: '失物招領偵探', en: 'Lost and Found',
+    sub: "Whose…?・所有格 's / s'・Long e 發音・分享",
+    learn: [
+      { k: 'possess', title: '🧩 所有格：誰的？', sub: '點一點，聽聽「我的、你的、他的…」怎麼說。' },
+      { k: 'rule', title: "✏️ 名詞所有格：'s 和 s'", html:
+        `<p><b>一個人／單數</b> → 加 <b>'s</b>：${chip("Jake's watch")}${chip("Olivia's smartphone")}${chip(`${LEARNER}'s lunch box`)}</p>
+         <p><b>複數（字尾已經有 s）</b> → 只加 <b>'</b>：${chip("the boys' colored pencils")}${chip("the girls' wallets")}</p>` },
+      { k: 'dialog', title: '❓ Is this…? / Are these…?', sub: '單數用 it 回答，複數用 they 回答。', pairs: [
+        ['Is this your smartphone?', '這是你的智慧型手機嗎？', "No, *it's* Olivia's smartphone.", '不是，這是 Olivia 的智慧型手機。'],
+        ['Is that your lunch box?', '那是你的便當盒嗎？', "No, *it's* Henry's lunch box.", '不是，那是 Henry 的便當盒。'],
+        ['Are these our notebooks?', '這些是我們的筆記本嗎？', 'Yes, *they are*.', '是的，它們是。'],
+        ["Are those the boys' wallets?", '那些是男孩們的皮夾嗎？', "No, *they're* the girls' wallets.", '不是，那些是女孩們的皮夾。']] },
+      { k: 'dialog', title: '🔍 Whose…? 誰的？', sub: 'Whose ＋ 單數物品 ＋ is this / that?　Whose ＋ 複數物品 ＋ are these / those?', pairs: [
+        ['*Whose* watch is this?', '這是誰的手錶？', "*It's* Jake's watch.", '這是 Jake 的手錶。'],
+        ['*Whose* wallet is this?', '這是誰的皮夾？', "*It's* my wallet.", '這是我的皮夾。'],
+        ['*Whose* colored pencils are these?', '這些是誰的彩色鉛筆？', "*They're* their colored pencils.", '這些是他們的彩色鉛筆。'],
+        ['*Whose* keys are these?', '這些是誰的鑰匙？', "*They're* my keys.", '這些是我的鑰匙。']] },
+      { k: 'phonics', title: '🔤 Phonics：Long e /iː/', sub: 'ea、ee、ey 都可以發出長長的 e 音。點單字聽發音！', groups: [
+        { tag: 'ea', words: [['b[ea]n', '豆子', '🫘'], ['l[ea]f', '樹葉', '🍃'], ['b[ea]ch', '海灘', '🏖️'], ['cl[ea]n', '打掃；乾淨的', '🧽']] },
+        { tag: 'ee', words: [['b[ee]', '蜜蜂', '🐝'], ['j[ee]p', '吉普車', '🚙'], ['f[ee]t', '腳（複數）', '🦶']] },
+        { tag: 'ey', words: [['all[ey]', '巷弄', '🏘️'], ['k[ey]', '鑰匙', '🔑'], ['hon[ey]', '蜂蜜', '🍯']] }] },
+      { k: 'lines', title: '💖 閱讀：Sharing 分享', sub: '點句子聽朗讀，也可以按「全部朗讀」。', story: 1, items: [
+        ['Share your toys. Share your food.', '分享你的玩具，分享你的食物。'],
+        ['You are happy. Your friends are happy, too!', '你很開心，你的朋友也很開心！'],
+        ['We can *share our feelings*, too.', '我們也可以分享心情。'],
+        ['Is your friend sad? *Give help*.', '朋友難過嗎？伸出援手。'],
+        ['Or give a *simple hug*.', '或是給一個簡單的擁抱。'],
+        ['We *care about* each other.', '我們彼此關心。']] }
+    ],
+    quiz: [
+      { type: 'choice', scene: { item: '⌚', n: 1, far: 0, tag: 'Jake' }, p: 'Whose watch is this?', say: 'Whose watch is this?', o: ["It's Jake's watch.", "They're Jake's watch.", "It's Jake watch.", 'Yes, it is.'], why: "Whose 問「誰的」。一支手錶（單數）→ It's；Jake 的 → Jake's（人名 ＋ 's）。" },
+      { type: 'choice', scene: { item: '🔑', n: 2, far: 0, tag: LEARNER }, p: 'Whose keys are these?', say: 'Whose keys are these?', o: [`They're ${LEARNER}'s keys.`, `It's ${LEARNER}'s keys.`, `They're ${LEARNER}s' keys.`, 'Yes, they are.'], why: `keys 是複數 → They're；${LEARNER} 的 → ${LEARNER}'s。` },
+      { type: 'choice', scene: { item: '📱', n: 1, far: 1, tag: 'Olivia' }, p: 'Is that your smartphone?', say: 'Is that your smartphone?', o: ["No, it's Olivia's smartphone.", "No, they're Olivia's smartphone.", 'Yes, they are.', "No, it's Olivias smartphone."], why: "手機不是你的，是 Olivia 的。一支手機（單數）→ No, it's Olivia's smartphone." },
+      { type: 'choice', scene: { item: '👛', n: 2, far: 1, tag: 'the girls' }, p: "Are those the boys' wallets?", say: "Are those the boys' wallets?", o: ["No, they're the girls' wallets.", "No, it's the girls' wallets.", "No, they're the girl's wallets.", 'Yes, it is.'], why: "wallets 是複數 → they're；girls 是複數、字尾已經有 s → 只加 '（the girls'）。" },
+      { type: 'choice', scene: { item: '📓', n: 2, far: 0, tag: '我們的 ✅' }, p: 'Are these our notebooks?', say: 'Are these our notebooks?', o: ['Yes, they are.', 'Yes, it is.', "No, it isn't.", 'Yes, we are.'], why: 'these（複數）的問句 → 用 they 回答：Yes, they are.' },
+      { type: 'choice', lead: '🧒🧒 🍱🍱', p: `${LEARNER} and Jake have lunch boxes. They're ___ lunch boxes.`, o: ['their', 'our', 'his', 'her'], full: "They're their lunch boxes.", why: '兩個人（他們）的 → their。our 是「我們的」。' },
+      { type: 'choice', lead: '👧 BOTTLE', p: 'Olivia is a girl. This is ___ water bottle.', o: ['her', 'his', 'its', 'their'], full: 'This is her water bottle.', why: '女生 → 她的 ＝ her；男生 → 他的 ＝ his。' },
+      { type: 'choice', lead: '👦👦 🖍️🖍️', p: '男孩們的彩色鉛筆', o: ["the boys' colored pencils", "the boy's colored pencils", "the boys's colored pencils", 'the boys colored pencil'], why: "boys 是複數、字尾已經有 s → 直接加 '：the boys'。" },
+      { type: 'order', w: ['Whose', 'watch', 'is', 'this?'], zh: '這是誰的手錶？', why: 'Whose ＋ 物品 ＋ is this?' },
+      { type: 'sort', p: '長母音 e 有三種拼法，把單字放進對的家族！', hint: '仔細看拼字：字裡有 ea？ee？還是 ey？', bins: [{ k: 'ea', t: 'ea' }, { k: 'ee', t: 'ee' }, { k: 'ey', t: 'ey' }], items: [{ t: 'b[ea]n', e: '🫘', b: 'ea' }, { t: 'b[ee]', e: '🐝', b: 'ee' }, { t: 'k[ey]', e: '🔑', b: 'ey' }, { t: 'l[ea]f', e: '🍃', b: 'ea' }, { t: 'f[ee]t', e: '🦶', b: 'ee' }, { t: 'hon[ey]', e: '🍯', b: 'ey' }] },
+      { type: 'choice', lead: '😢', p: 'Your friend is sad. What can you do?', say: 'Your friend is sad. What can you do?', o: ['Give a hug. 🤗', 'Look at your watch. ⌚', 'Eat all the food. 🍔', 'Go home. 🏠'], why: '分享不只是玩具和食物，也可以分享心情。朋友難過時，給予幫助或一個擁抱，表示我們關心彼此（care about each other）。' }
+    ]
+  },
+  /* ---------------- Level 5 ---------------- */
+  {
+    n: 5, unit: 'Review', icon: '🐧', title: '總複習大挑戰', en: 'Final Review',
+    sub: '小企鵝科普閱讀＋兩個單元綜合練習',
+    learn: [
+      { k: 'lines', title: '🐧 CLIL 閱讀：A Little Penguin', sub: '自然科學小短文。點句子聽朗讀；虛線框 ☂️ 是「主旨句」。', story: 1, main: 2, items: [
+        ['This is Penny.', '這是 Penny。'],
+        ['Penny is a little penguin.', 'Penny 是一隻小企鵝。'],
+        ['Little penguins are *busy every day*.', '小企鵝每天都很忙碌。'],
+        ['At 7:00 in the morning, they go to the *sea* *together*.', '早上七點，牠們一起去海裡。'],
+        ['They *hunt* for fish in the sea.', '牠們在海裡捕魚。'],
+        ['At 6:00 in the evening, they come home.', '傍晚六點，牠們回到家。'],
+        ['At night, they are very *noisy*.', '到了晚上，牠們非常吵鬧。'],
+        ['They chat with their friends!', '牠們和朋友聊天！']] },
+      { k: 'rule', title: '☂️ 主旨 Main Idea 和 💧 細節 Details', html:
+        `<p><b>主旨</b>：整篇文章最重要的一句話，像一把大傘 ☂️，罩住全部內容。</p>
+         <p><b>細節</b>：用來支持主旨的例子，像傘下的小雨滴 💧。</p>
+         <p>例：<b>Little penguins are busy every day.</b>（主旨）→ 早上七點去海裡捕魚、傍晚六點回家、晚上很吵鬧（細節）。</p>` },
+      { k: 'cards', title: '🔎 Word Explorer 單字探險', items: [
+        { e: '🤝', en: 'together', zh: '一起' }, { e: '🐝', en: 'busy', zh: '忙碌的' }, { e: '🔁', en: 'every', zh: '每一個' },
+        { e: '🎣', en: 'hunt', zh: '獵捕' }, { e: '🌊', en: 'sea', zh: '海洋' }, { e: '📢', en: 'noisy', zh: '吵鬧的' }] },
+      { k: 'cards', title: '🌏 Explore More 小知識', items: [
+        { e: '🦘', en: 'Australia', zh: '小企鵝主要住在澳洲', say: 'Little penguins live in Australia.' },
+        { e: '⚖️', en: 'about 1.2 kg', zh: '體重約 1.2 公斤', say: 'They weigh about 1.2 kilograms.' },
+        { e: '📏', en: 'about 35 cm', zh: '身高約 35 公分', say: 'They are about 35 centimeters tall.' },
+        { e: '😴', en: '4-minute naps', zh: '白天晚上小睡很多次，每次約 4 分鐘', say: 'They take many naps. Each nap is about 4 minutes.' }] },
+      { k: 'rule', title: '📋 總複習重點', html:
+        `<ol>
+          <li>看時鐘：短針是「時」、長針是「分」。幾點用 <b>at</b>（at 8:45），時段用 <b>in the morning / in the evening</b>，夜間用 <b>at night</b>。</li>
+          <li>單數物品（wallet、watch、smartphone）→ <b>It's…</b>；複數物品（keys、glasses、colored pencils）→ <b>They're…</b></li>
+          <li><b>our</b> 我們的　<b>your</b> 你的／你們的　<b>their</b> 他們的</li>
+          <li>單數人名加 <b>'s</b>（Vicky's、Nate's）；複數字尾有 s 只加 <b>'</b>（the girls'、the boys'）。</li>
+        </ol>` }
+    ],
+    quiz: [
+      { type: 'choice', lead: '🐧', p: 'What is the main idea?', zh: '這篇文章的主旨是哪一句？', o: ['Little penguins are busy every day.', 'Little penguins live in Australia.', 'At night, little penguins are noisy.', 'Little penguins hunt for fish.'], why: '「每天都很忙」是整篇的大傘 ☂️；住在澳洲、捕魚、晚上很吵，都是說明的細節 💧。' },
+      { type: 'choice', lead: '🐧 🌊', p: 'What time do the penguins go to the sea?', say: 'What time do the penguins go to the sea?', o: ['At 7:00 in the morning.', 'At 6:00 in the evening.', 'At 7:00 at night.', 'At noon.'], why: '課文：At 7:00 in the morning, they go to the sea together.' },
+      { type: 'choice', lead: '🐧 🏠', p: 'What time do they come home?', say: 'What time do they come home?', o: ['At 6:00 in the evening.', 'At 7:00 in the morning.', 'At 6:00 in the morning.', 'At 9:45 at night.'], why: '課文：At 6:00 in the evening, they come home.' },
+      { type: 'choice', lead: '📏', p: 'A little penguin is about ___ tall.', o: ['35 cm', '1.2 cm', '4 cm', '135 cm'], full: 'A little penguin is about 35 cm tall.', fullSay: 'A little penguin is about 35 centimeters tall.', why: '小企鵝身高約 35 公分、體重約 1.2 公斤，每次小睡大約 4 分鐘。' },
+      { type: 'clock', h: 9, m: 45, why: '長針（分）指著 9 ＝ 45 分；短針（時）在 9 和 10 之間、快到 10 了。' },
+      { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [10, 15], o: ["It's 10:15.", "It's 3:50.", "It's 10:03.", "It's 2:50."], why: '短針（時）剛過 10，長針（分）指著 3 ＝ 15 分。別把長短針看反了，不是 3:50 喔！' },
+      { type: 'choice', lead: '🍲 🌇', tag: '6:30', p: `${LEARNER} has dinner ___ 6:30 ___ the evening.`, o: ['at … in', 'in … at', 'at … at', 'in … in'], full: `${LEARNER} has dinner at 6:30 in the evening.`, why: '幾點幾分用 at（at 6:30）；時段用 in the evening。' },
+      { type: 'choice', lead: '👓', p: "Whose glasses are these? ___ Henry's glasses.", o: ["They're", "It's", 'This is', 'Is'], full: "They're Henry's glasses.", why: "glasses 是複數 → They're。" },
+      { type: 'choice', lead: '👛', p: "Whose wallet is that? ___ Nate's wallet.", o: ["It's", "They're", 'These are', 'Are'], full: "It's Nate's wallet.", why: "wallet 是單數 → It's。" },
+      { type: 'choice', lead: '🏫', tag: '我們的教室', p: 'This is ___ classroom.', o: ['our', 'your', 'their', 'its'], full: 'This is our classroom.', why: 'our ＝ 我們的；your ＝ 你的／你們的；their ＝ 他們的。' },
+      { type: 'choice', lead: '👧👧 👛👛', p: '女孩們的皮夾', o: ["the girls' wallets", "the girl's wallets", "the girls's wallets", "the girls wallet's"], why: "girls 字尾已經有 s → 只加 '；單數人名才加 's（例如 Vicky's）。" },
+      { type: 'order', w: [LEARNER, 'wakes up', 'at', '6:30', 'in the morning.'], zh: `${LEARNER} 早上六點半起床。`, why: `${LEARNER} 是第三人稱單數 → wakes up（加 s）。` },
+      { type: 'sort', p: 'Long a 還是 Long e？聽一聽、看一看！', hint: 'ai、ay、a_e 是 Long a；ea、ee、ey 是 Long e。', bins: [{ k: 'a', t: 'Long a', sub: '/eɪ/ ai・ay・a_e' }, { k: 'e', t: 'Long e', sub: '/iː/ ea・ee・ey' }], items: [{ t: 'c[a]k[e]', e: '🎂', b: 'a' }, { t: 'b[ee]', e: '🐝', b: 'e' }, { t: 'r[ai]n', e: '🌧️', b: 'a' }, { t: 'l[ea]f', e: '🍃', b: 'e' }, { t: 'pl[ay]', e: '🎮', b: 'a' }, { t: 'k[ey]', e: '🔑', b: 'e' }] }
+    ]
+  }
+];
+
+const UNITS = [
+  { tag: 'Unit 1', title: 'What a Day!', zh: '日常作息與時間', lv: [1, 2] },
+  { tag: 'Unit 2', title: 'In the Classroom', zh: '教室與隨身物品', lv: [3, 4] },
+  { tag: 'Review', title: 'Final Review', zh: '小企鵝閱讀＋總複習', lv: [5] }
+];
+const PRAISE = [`Great job, ${LEARNER}!`, `Awesome, ${LEARNER}!`, 'You got it!', 'Excellent!', `Well done, ${LEARNER}!`, `Super, ${LEARNER}!`];
+const TRY = [`Nice try, ${LEARNER}!`, 'Almost there!', 'Good try!'];
+const ZH_OK = ['答對了！', '太棒了！', '好厲害！', '完全正確！'];
+
+/* ===================== state ===================== */
+const app = $('#app');
+let cur = 1, run = null, learnT = 450;
+const starsHTML = n => `<span class="stars" aria-label="${n} 顆星">${[1, 2, 3].map(i => `<span class="${i <= n ? 'on' : ''}">★</span>`).join('')}</span>`;
+const RATES = [[0.65, '🐢', '慢速'], [0.85, '🙂', '標準'], [1, '🐇', '快速']];
+function updateTop() {
+  $('#starNum').textContent = totalStars();
+  const r = RATES.find(x => x[0] === save.rate) || RATES[1];
+  $('#speedBtn').innerHTML = `${r[1]}<span class="lbl"> ${r[2]}</span>`;
+  $('#soundBtn').textContent = save.sound ? '🔔' : '🔕';
+}
+function show(html, lv) {
+  if (TTS.ok) { TTS.token++; speechSynthesis.cancel(); }
+  app.innerHTML = lv ? `<div data-lv="${lv}">${html}</div>` : html;
+  window.scrollTo(0, 0);
+  updateTop();
+}
+/* two-tap confirm instead of native dialogs */
+function armed(el, msg) {
+  if (el.classList.contains('armed')) { el.classList.remove('armed'); return true; }
+  el.classList.add('armed'); toast(msg);
+  setTimeout(() => el.classList.remove('armed'), 3000);
+  return false;
+}
+
+/* ===================== map ===================== */
+function renderMap() {
+  run = null;
+  const total = totalStars(), allDone = LEVELS.every(L => save.best[L.n]);
+  const next = LEVELS.find(L => !save.best[L.n]);
+  const msg = allDone ? `${LEARNER} 全部過關了，好厲害！🎉 快去領取你的證書吧！`
+    : total === 0 ? `Hi, ${LEARNER}! 👋 我是小企鵝 Penny。跟我一起完成 5 個關卡，收集 15 顆星星吧！`
+    : `繼續加油，${LEARNER}！下一站：第 ${next.n} 關「${next.title}」。`;
+  const lvCard = L => {
+    const open = isOpen(L.n), st = save.best[L.n] || 0;
+    return `<button class="lv${open ? '' : ' locked'}" data-lv="${L.n}" data-act="open" data-n="${L.n}"${open ? '' : ' aria-disabled="true"'}>
+      <span class="num"><b>${L.n}</b>${open ? L.icon : '🔒'}</span>
+      <span class="lv-t"><span class="t">${esc(L.title)}</span><span class="e">${esc(L.en)}</span><span class="s">${esc(L.sub)}</span>${starsHTML(st)}${!st && open ? '<span class="go">開始 ▶</span>' : ''}</span>
+    </button>`;
+  };
+  show(`
+    <div class="hero">
+      <div class="penny" aria-hidden="true">🐧</div>
+      <div class="bubble"><p>${msg}</p><button class="say-btn" data-say="Hi, ${LEARNER}! I'm Penny, the little penguin. Let's go on an English adventure!">🔊 聽 Penny 說話</button></div>
+    </div>
+    ${UNITS.map(u => `<section class="unit" data-lv="${u.lv[0] === 5 ? 5 : u.lv[0]}">
+      <div class="unit-h"><span class="tag">${u.tag}</span><h3>${u.title}</h3><span class="uzh">${u.zh}</span></div>
+      <div class="levels">${u.lv.map(n => lvCard(LEVELS[n - 1])).join('')}</div>
+    </section>`).join('')}
+    ${allDone ? `<div class="row-c" data-lv="1"><button class="btn big" data-act="cert">🎓 領取 ${LEARNER} 的證書</button></div>` : ''}
+    <footer class="foot">
+      <div>📖 內容依據：Unit 1 What a Day!・Unit 2 In the Classroom・CLIL Reading 1・Review 1</div>
+      <div>🔊 朗讀使用瀏覽器內建英文語音（建議使用 Chrome 或 Edge）${TTS.ok ? '' : '　⚠️ 這個瀏覽器不支援朗讀'}</div>
+      <div class="links">
+        <button class="link" data-act="unlock">${save.unlockAll ? '🔒 恢復依序解鎖' : '🔓 家長／老師：解鎖全部關卡'}</button>
+        <button class="link" data-act="reset">🗑️ 清除闖關紀錄</button>
+      </div>
+    </footer>`);
+}
+
+/* ===================== learn ===================== */
+function levelHead(L, mode) {
+  return `<div class="lv-head">
+      <button class="back" data-act="${mode === 'quiz' ? 'quit' : 'map'}" aria-label="回到地圖">←</button>
+      <div class="num">${L.icon}</div>
+      <div><div class="ut">${L.unit} ・ 第 ${L.n} 關</div><h2>${esc(L.title)}<small>${esc(L.en)}</small></h2></div>
+    </div>
+    <div class="steps">
+      <button class="step${mode === 'learn' ? ' on' : ''}" ${mode === 'learn' ? 'disabled' : mode === 'result' ? 'data-act="learn"' : 'disabled'}>① 學習 Learn</button>
+      <button class="step${mode !== 'learn' ? ' on' : ''}" ${mode === 'learn' ? 'data-act="quiz"' : 'disabled'}>② 挑戰 Challenge</button>
+    </div>`;
+}
+const sec = (b, inner) => `<section class="card block"><h3>${b.title}</h3>${b.sub ? `<p class="sub">${b.sub}</p>` : ''}${inner}</section>`;
+const tile = it => `<button class="tile" data-say="${esc(it.say || it.en)}"><span class="e">${ico(it.e)}</span><span class="en">${esc(it.en)}</span><span class="zh">${esc(it.zh)}</span>${it.ex ? `<span class="ex" data-say="${esc(it.ex)}">🔊 ${esc(it.ex)}</span>` : ''}</button>`;
+const sentBtn = (s, extra = '', cls = '') => `<button class="sent${cls}" data-say="${esc(plain(s[0]))}"><span class="en">${md(s[0])}${extra}</span><span class="zh">${esc(s[1])}</span></button>`;
+
+function blockHTML(b, bi) {
+  switch (b.k) {
+    case 'clock': return sec(b, `<div class="clock-learn">
+        <div class="clockbox">${clockSVG(learnT, 'lclock')}${LEGEND}</div>
+        <div class="clock-side">
+          <div class="digital" id="ldig">It's ${fmtT(learnT)}.</div><div class="dzh" id="ldzh">${zhT(learnT)}</div>
+          <button class="say-btn" data-act="lsay">🔊 What time is it?</button>
+          ${CTRLS('lclk')}
+          <div class="presets">${b.presets.map(t => `<button class="chip" data-act="preset" data-t="${t}">${t}</button>`).join('')}</div>
+        </div></div>`);
+    case 'cards': return sec(b, `<div class="grid">${b.items.map(tile).join('')}</div>`);
+    case 'items': return sec(b, `<div class="grid">${ITEMS.map(it => `<button class="tile" data-say="${esc(it.en)}"><span class="e">${ico(it.e)}</span><span class="en">${esc(it.en)}</span><span class="zh">${esc(it.zh)}</span><span class="ex" data-say="${esc(it.pl ? `one ${it.en}, two ${it.pl}` : 'glasses. They are my glasses.')}">${it.pl ? `🔊 ${esc(it.en)} → ${esc(it.pl)}` : '🔊 永遠是複數 ✌️'}</span></button>`).join('')}</div>`);
+    case 'lines': return sec(b, `<div class="row"><button class="say-btn" data-act="readall" data-b="${bi}">▶ 全部朗讀</button><button class="say-btn" data-act="zh">中文 顯示／隱藏</button></div>
+        <div class="story" id="story${bi}">${b.items.map((s, i) => sentBtn(s, b.main === i ? '<span class="mark">☂️ 主旨</span>' : '', b.main === i ? ' main' : '')).join('')}</div>`);
+    case 'dialog': return sec(b, `<div class="dlg">${b.pairs.map(p => `<div class="qa">
+        <button class="line" data-say="${esc(plain(p[0]))}"><span class="who q">Q</span><span class="t">${md(p[0])}<span class="zh">${esc(p[1])}</span></span></button>
+        <button class="line" data-say="${esc(plain(p[2]))}"><span class="who a">A</span><span class="t">${md(p[2])}<span class="zh">${esc(p[3])}</span></span></button>
+      </div>`).join('')}</div>`);
+    case 'rule': return sec(b, `<div class="rule">${b.html}</div>`);
+    case 'verbs': return sec(b, `<div class="rule"><table class="tbl"><thead><tr><th>I / You / We / They</th><th>${LEARNER} / He / She</th><th>規則</th></tr></thead><tbody>
+        ${VERBS.map(v => `<tr><td>${chip(v[0])}</td><td>${chip(v[1])}</td><td>${v[2]}</td></tr>`).join('')}</tbody></table>
+        <p class="note">⚠️ 問句用 <b>does</b> 時，後面的動詞要變回原形：What time does ${LEARNER} <b>get</b> dressed?（✗ gets）</p></div>`);
+    case 'phonics': return sec(b, `<div class="ph">${b.groups.map(g => `<div class="ph-group"><span class="ph-tag">${g.tag}</span><div class="ph-words">${g.words.map(w => `<button class="ph-w" data-say="${plain(w[0])}"><span class="pe">${w[2]}</span><span class="pw hl">${hl(w[0])}</span><span class="pz">${w[1]}</span></button>`).join('')}</div></div>`).join('')}</div>`);
+    case 'countries': return sec(b, `<div class="row"><button class="say-btn" data-act="zh">中文 顯示／隱藏</button></div><div class="ctry">${b.items.map(c => `<div class="ctry-c"><div class="ctry-h"><span>${c.e}</span>${c.name}</div>${c.lines.map(l => sentBtn(l)).join('')}</div>`).join('')}</div>`);
+    case 'scene4': return sec(b, `<div class="s4">${S4.map(s => `<button class="s4c" data-say="${s.ex}">${sceneHTML(s.sc)}<div class="s4t"><b>${s.w}</b> ${s.zh}<small>${s.d}</small></div><div class="s4e">🔊 ${s.ex}</div></button>`).join('')}</div>
+        <p class="sub" style="margin:10px 0 0">this / that 後面接 is；these / those 後面接 are。</p>`);
+    case 'possess': return sec(b, `<div class="poss">${POSS.map(p => `<button class="poss-c" data-say="${p[2]}. ${p[4]}."><span class="pp">${p[2]}</span><span class="ps">${p[0]}（${p[1]}）→</span><span class="pz">${p[3]}</span><span class="px">🔊 ${p[4]}</span></button>`).join('')}</div>`);
+  }
+  return '';
+}
+function renderLearn(L) {
+  cur = L.n; run = null;
+  show(`${levelHead(L, 'learn')}
+    <div class="tip"><span>🐧</span><div>${LEARNER}，先點卡片聽一聽、跟著念一念，學會了再按最下面的「開始挑戰」！</div></div>
+    ${L.learn.map(blockHTML).join('')}
+    <div class="cta"><button class="btn big" data-act="quiz">我準備好了！開始挑戰 ▶</button></div>`, L.n);
+}
+function updLearnClock(speak = true) {
+  setHands($('#lclock'), learnT);
+  const d = $('#ldig'); if (!d) return;
+  d.textContent = `It's ${fmtT(learnT)}.`; $('#ldzh').textContent = zhT(learnT);
+  if (speak) TTS.say(`It's ${fmtT(learnT)}.`);
+}
+function readAll(bi) {
+  const b = LEVELS[cur - 1].learn[bi], nodes = $$(`#story${bi} .sent`);
+  TTS.sayList(b.items.map(s => plain(s[0])), i => {
+    nodes.forEach((n, j) => n.classList.toggle('reading', j === i));
+    if (i >= 0) nodes[i].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
+}
+
+/* ===================== quiz engine ===================== */
+const ptsOf = q => q.type === 'sort' ? q.items.length : 1;
+const fullOf = q => q.full || (q.type === 'order' ? q.w.join(' ') : q.type === 'clock' ? `It's ${q.h}:${pad(q.m)}.` : typeof q.o[0] === 'string' ? q.o[0] : q.o[0].t);
+const sayOf = q => q.fullSay || fullOf(q);
+const blank = s => esc(s).replace(/___/g, '<span class="blank">　?　</span>');
+
+function startQuiz(n) {
+  const L = LEVELS[n - 1]; cur = n;
+  const qs = L.quiz.map(q => Object.assign({}, q, { tries: 0 }));
+  run = { L, n, queue: qs, pos: 0, total: qs.reduce((s, q) => s + ptsOf(q), 0), done: 0, good: 0, missed: [], missedSort: [], retry: [], retryMode: false, locked: false };
+  advance();
+}
+function advance() {
+  if (run.pos < run.queue.length) { run.q = run.queue[run.pos]; run.locked = false; renderQ(); return; }
+  if (run.retry.length) {
+    const intro = !run.retryMode;
+    run.queue = run.retry; run.retry = []; run.pos = 0; run.retryMode = true;
+    if (intro) return showRetryIntro();
+    run.q = run.queue[0]; run.locked = false; renderQ(); return;
+  }
+  finish();
+}
+function barHTML() {
+  if (run.retryMode) return `<div class="qbar"><span class="qcount">🔁 錯題再練 ${run.pos + 1} / ${run.queue.length}</span><div class="track"><div class="fill" style="width:${run.pos / run.queue.length * 100}%"></div></div></div>`;
+  return `<div class="qbar"><div class="track"><div class="fill" id="fill" style="width:${run.done / run.total * 100}%"></div></div><span class="qcount" id="qcount">${run.done} / ${run.total}</span></div>`;
+}
+function updateBar() {
+  if (run.retryMode) return;
+  const f = $('#fill'); if (f) f.style.width = `${run.done / run.total * 100}%`;
+  const c = $('#qcount'); if (c) c.textContent = `${run.done} / ${run.total}`;
+}
+function visualHTML(q) {
+  let v = '';
+  if (q.clock) v += `<div class="clockbox">${clockSVG(q.clock[0] * 60 + q.clock[1])}${LEGEND}</div>`;
+  if (q.scene) v += sceneHTML(q.scene);
+  if (q.lead) v += `<div class="lead">${ico(q.lead)}</div>`;
+  if (q.tag) v += `<div class="qtag">${esc(q.tag)}</div>`;
+  return v;
+}
+function renderQ() {
+  const q = run.q;
+  let body;
+  if (q.type === 'order') {
+    run.tiles = shuffle(q.w); let g = 0;
+    while (run.tiles.join('|') === q.w.join('|') && g++ < 10) run.tiles = shuffle(q.w);
+    run.picked = [];
+    body = `<p class="prompt">排一排，組成正確的句子！</p><p class="qzh">${esc(q.zh)}</p>
+      <div class="ans-line" id="ansLine"></div>
+      <div class="bank" id="bank">${run.tiles.map((t, k) => `<button class="wt" data-act="tile" data-k="${k}">${esc(t)}</button>`).join('')}</div>
+      <div class="row-c"><button class="btn ghost" data-act="tclear">↺ 重排</button><button class="btn" id="chk" data-act="tcheck" disabled>檢查 ✔</button></div>`;
+  } else if (q.type === 'clock') {
+    run.t = 720;
+    const tgt = `It's ${q.h}:${pad(q.m)}.`;
+    body = `<p class="prompt sm">轉動指針，把時鐘撥到：</p><p class="target">${tgt} <button class="say-btn" data-say="${tgt}" aria-label="聽">🔊</button></p>
+      <div class="clockbox">${clockSVG(720, 'qclock')}${LEGEND}${CTRLS('qclk')}</div>
+      <div class="row-c"><button class="btn" data-act="ccheck">檢查 ✔</button></div>`;
+  } else if (q.type === 'sort') {
+    run.items = shuffle(q.items).map(it => Object.assign({}, it, { miss: false })); run.si = 0;
+    body = `<p class="prompt">${esc(q.p)}</p><div class="sort-stage" id="stage"></div>
+      <div class="bins" style="--n:${q.bins.length}">${q.bins.map(b => `<button class="bin" data-act="bin" data-k="${b.k}"><span class="bt">${esc(b.t)}</span>${b.sub ? `<span class="bs">${esc(b.sub)}</span>` : ''}<span class="got"></span></button>`).join('')}</div>
+      <div class="sort-msg" id="sortMsg" aria-live="polite"></div>`;
+  } else {
+    const opts = shuffle(q.o.map((o, i) => ({ o, ok: i === 0 })));
+    const long = !q.pics && q.o.some(o => String(o).length > 26);
+    const prompt = q.type === 'listen'
+      ? `<button class="big-listen" data-say="${esc(q.say)}" aria-label="播放題目">🔊</button><p class="prompt sm">${q.pics ? '聽一聽，選出正確的圖片！' : '聽一聽，選出你聽到的單字！'}</p>`
+      : `<p class="prompt">${blank(q.p)}${q.say ? ` <button class="say-btn" data-say="${esc(q.say)}" aria-label="聽題目">🔊</button>` : ''}</p>${q.zh ? `<p class="qzh">${esc(q.zh)}</p>` : ''}`;
+    body = `${visualHTML(q)}${prompt}<div class="opts${q.pics ? ' pics' : ''}${long ? ' long' : ''}">${opts.map(x => `<button class="opt" data-act="pick" data-ok="${x.ok ? 1 : 0}">${q.pics ? `<span class="pe">${ico(x.o.e)}</span><span class="pl">${esc(x.o.t)}</span>` : esc(x.o)}</button>`).join('')}</div>`;
+  }
+  show(`${levelHead(run.L, 'quiz')}${barHTML()}<section class="card qcard" id="qcard">${body}<div id="fb" aria-live="polite"></div></section>`, run.n);
+  if (q.type === 'order') renderOrderLine();
+  if (q.type === 'sort') showSortItem();
+  else {
+    const s = q.type === 'clock' ? `It's ${q.h}:${pad(q.m)}.` : q.say;
+    if (s) setTimeout(() => TTS.say(s), 250);
+  }
+}
+function lockCard() { $$('#qcard button').forEach(b => { if (!b.dataset.say) b.disabled = true; }); }
+function resolve(ok) {
+  const q = run.q;
+  if (!run.retryMode) { run.done++; if (ok) run.good++; else { run.missed.push(q); run.retry.push(q); } }
+  else if (!ok && ++q.tries < 2) run.retry.push(q);
+  updateBar(); feedback(ok, q);
+}
+function feedback(ok, q, extra = '') {
+  const full = fullOf(q), en = ok ? pick(PRAISE) : pick(TRY);
+  $('#fb').innerHTML = `<div class="fb ${ok ? 'ok' : 'bad'}">
+    <div class="fb-h">${ok ? '✅' : '💡'} ${esc(en)} ${ok ? pick(ZH_OK) : '看看正確答案：'}</div>
+    <div class="fb-ans">${esc(full)} <button class="say-btn" data-say="${esc(sayOf(q))}" aria-label="再聽一次">🔊</button></div>
+    ${q.why ? `<div class="fb-why">📌 ${esc(q.why)}</div>` : ''}${extra}
+    <button class="btn" data-act="next">繼續 ➜</button></div>`;
+  if (ok) { SFX.good(); confetti(36); } else SFX.bad();
+  TTS.say(ok ? `${en} ${sayOf(q)}` : `${en} The answer is: ${sayOf(q)}`);
+  const nb = $('#fb .btn'); nb.focus({ preventScroll: true });
+  $('#fb').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function answerChoice(btn) {
+  if (run.locked) return; run.locked = true;
+  const ok = btn.dataset.ok === '1', box = btn.parentElement;
+  box.classList.add('done');
+  $$('.opt', box).forEach(b => { b.disabled = true; if (b.dataset.ok === '1') b.classList.add('ok'); });
+  if (!ok) btn.classList.add('bad', 'shake');
+  resolve(ok);
+}
+function renderOrderLine() {
+  $('#ansLine').innerHTML = run.picked.length
+    ? run.picked.map(k => `<button class="wt" data-act="untile" data-k="${k}">${esc(run.tiles[k])}</button>`).join('')
+    : '<span class="ans-hint">點下面的字卡，依照順序放上來 👇</span>';
+  $$('#bank .wt').forEach(b => b.classList.toggle('used', run.picked.includes(+b.dataset.k)));
+  $('#chk').disabled = run.picked.length !== run.tiles.length;
+}
+function checkOrder() {
+  if (run.locked) return; run.locked = true;
+  const ok = run.picked.map(k => run.tiles[k]).join(' ') === run.q.w.join(' ');
+  $('#ansLine').classList.add(ok ? 'ok' : 'bad');
+  lockCard(); resolve(ok);
+}
+function checkClock() {
+  if (run.locked) return; run.locked = true;
+  const target = run.q.h * 60 + run.q.m, ok = norm(run.t) === norm(target);
+  lockCard();
+  if (!ok) setTimeout(() => { run.t = nearest(run.t, target); setHands($('#qclock'), run.t); }, 500);
+  resolve(ok);
+  if (!ok) $('.fb-why').insertAdjacentHTML('afterend', '<div class="fb-why">👆 正確的時鐘已經幫你撥好了，看看指針在哪裡。</div>');
+}
+function showSortItem() {
+  const it = run.items[run.si], w = plain(it.t);
+  run.wait = false;
+  $('#stage').innerHTML = `<button class="sort-item" data-say="${esc(w)}"><span class="e">${ico(it.e)}</span><span class="w">${esc(w)}</span><small>🔊 點我再聽一次</small></button><div class="sort-count">${run.si + 1} / ${run.items.length}</div>`;
+  TTS.say(w);
+}
+function dropBin(k, el) {
+  if (run.locked || !run.items || run.wait) return;
+  const q = run.q, it = run.items[run.si], msg = $('#sortMsg');
+  const binT = b => q.bins.find(x => x.k === b).t;
+  if (k === it.b) {
+    SFX.good();
+    if (!run.retryMode) { run.done++; if (!it.miss) run.good++; }
+    $('.got', el).insertAdjacentHTML('beforeend', `<span class="hl">${hl(it.t)}</span>`);
+    msg.className = 'sort-msg ok'; msg.innerHTML = `✅ <span class="hl">${hl(it.t)}</span> → ${esc(binT(it.b))}`;
+    updateBar(); run.si++;
+    if (run.si >= run.items.length) {
+      run.locked = true; lockCard();
+      const miss = run.items.filter(x => x.miss).length;
+      $('#stage').innerHTML = `<div class="big-e">${miss ? '👍' : '🏆'}</div><div class="score">${miss ? `全部分好了！有 ${miss} 個第一次放錯，下次會更好！` : '全部第一次就放對了，太厲害了！'}</div>`;
+      $('#fb').innerHTML = `<div class="fb ok"><div class="fb-h">🎉 ${esc(pick(PRAISE))} 分類完成！</div><button class="btn" data-act="next">繼續 ➜</button></div>`;
+      confetti(60); TTS.say(pick(PRAISE));
+      $('#fb .btn').focus({ preventScroll: true });
+    } else { run.wait = true; setTimeout(() => { if (run && run.items && run.si < run.items.length) showSortItem(); }, 650); }
+  } else {
+    SFX.bad(); el.classList.add('shake'); setTimeout(() => el.classList.remove('shake'), 450);
+    if (!it.miss) { it.miss = true; run.missedSort.push({ w: plain(it.t), bin: binT(it.b) }); }
+    msg.className = 'sort-msg bad';
+    msg.textContent = `🤔 ${plain(it.t)} 不是「${binT(k)}」喔！${q.hint || ''}`;
+    TTS.say(plain(it.t));
+  }
+}
+function showRetryIntro() {
+  show(`${levelHead(run.L, 'quiz')}<section class="card center">
+      <div class="big-e">🔁</div><h3>錯題再練一次！</h3>
+      <p style="margin:8px 0 4px">剛剛有 ${run.queue.length} 題答錯了，再試一次，${LEARNER} 一定可以！</p>
+      <p class="sub" style="color:var(--muted)">（星星只看第一次作答，這一回合是練習）</p>
+      <div class="row-c"><button class="btn big" data-act="retrygo">開始練習 ▶</button></div>
+    </section>`, run.n);
+  TTS.say(`Let's try again, ${LEARNER}!`);
+}
+function finish() {
+  const pct = run.total ? run.good / run.total : 1;
+  const stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : 1;
+  const prev = save.best[run.n] || 0;
+  save.best[run.n] = Math.max(prev, stars); persist();
+  const L = run.L, n = run.n;
+  const msg = stars === 3 ? `滿分表現！${LEARNER} 太厲害了！` : stars === 2 ? '很棒！再挑戰一次就有機會拿到 3 顆星！' : '完成關卡了！看看下面的錯題，再挑戰一次會更好！';
+  const qLabel = q => q.type === 'listen' ? `🎧 聽力：${q.say}` : q.type === 'order' ? `🧩 排句子：${q.zh}` : q.type === 'clock' ? '⏰ 撥時鐘' : `${q.clock ? '⏰ 看時鐘：' : '❓ '}${q.p.replace(/___/g, '＿＿')}`;
+  const items = run.missed.map(q => `<li><span class="mq">${esc(qLabel(q))}</span><span class="ma">✔ ${esc(fullOf(q))}</span><button class="say-btn" data-say="${esc(sayOf(q))}" aria-label="聽">🔊</button></li>`)
+    .concat(run.missedSort.map(s => `<li><span class="mq">🗂️ 分類：${esc(s.w)}</span><span class="ma">✔ ${esc(s.bin)}</span><button class="say-btn" data-say="${esc(s.w)}" aria-label="聽">🔊</button></li>`));
+  const nextBtn = n < 5 ? `<button class="btn" data-act="open" data-n="${n + 1}">下一關 ▶</button>` : `<button class="btn" data-act="cert">🎓 領取證書</button>`;
+  show(`${levelHead(L, 'result')}<section class="card center">
+      <div class="big-stars">${[1, 2, 3].map(i => `<span class="${i <= stars ? 'on' : ''}">★</span>`).join('')}</div>
+      <h3>第 ${n} 關完成！</h3>
+      <p class="score">第一次就答對 ${run.good} / ${run.total}（${Math.round(pct * 100)}%）</p>
+      <p style="margin-top:6px">${msg}</p>
+      ${prev === 0 && n < 5 ? `<span class="unlock">🔓 解鎖第 ${n + 1} 關：${esc(LEVELS[n].title)}</span>` : ''}
+      ${prev && stars > prev ? `<span class="unlock">⬆️ 刷新紀錄：${prev} → ${stars} 顆星</span>` : ''}
+      ${items.length ? `<div class="review"><h4>📒 錯題回顧（點 🔊 再聽一次）</h4><ul>${items.join('')}</ul></div>` : ''}
+      <div class="row-c"><button class="btn ghost" data-act="quiz">🔁 再玩一次</button><button class="btn ghost" data-act="map">🗺️ 回到地圖</button>${nextBtn}</div>
+    </section>`, n);
+  SFX.fanfare(); confetti(160);
+  TTS.say(`Level ${n} complete! ${stars === 3 ? 'Perfect' : 'Great job'}, ${LEARNER}!`);
+  run = null;
+}
+
+/* ===================== certificate ===================== */
+function renderCert() {
+  if (!LEVELS.every(L => save.best[L.n])) { toast('完成全部 5 關就能領證書喔！'); return; }
+  const d = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
+  show(`<div class="cert">
+      <div class="big-e">🏆</div>
+      <div class="k">Certificate of Achievement</div>
+      <h2>英語冒險小達人</h2>
+      <p>This certifies that</p>
+      <div class="name">${LEARNER}</div>
+      <p>完成了 Unit 1「What a Day!」、Unit 2「In the Classroom」<br>與總複習的全部 5 個關卡！</p>
+      <div class="lvls">${LEVELS.map(L => `<span>${L.icon} 第 ${L.n} 關 ${'★'.repeat(save.best[L.n] || 0)}</span>`).join('')}</div>
+      <div class="total">⭐ ${totalStars()} / 15</div>
+      <div class="d">${d}　・　小企鵝 Penny 🐧 頒發</div>
+    </div>
+    <div class="row-c no-print" data-lv="1"><button class="btn ghost" data-act="map">🗺️ 回到地圖</button>${CAN_PRINT ? '<button class="btn" data-act="print">🖨️ 列印證書</button>' : ''}</div>
+    ${CAN_PRINT ? '' : '<p class="center no-print" style="color:var(--muted);margin-top:10px">📸 想保存證書，可以直接截圖喔！</p>'}`);
+  SFX.fanfare(); confetti(200);
+  TTS.say(`Congratulations, ${LEARNER}! You are an English superstar!`);
+}
+
+/* ===================== events ===================== */
+const ACTS = {
+  map: () => renderMap(),
+  open: el => { const n = +el.dataset.n; if (!isOpen(n)) { SFX.bad(); toast('🔒 先完成前一關，就能解鎖這一關喔！'); return; } SFX.pop(); renderLearn(LEVELS[n - 1]); },
+  learn: () => { SFX.pop(); renderLearn(LEVELS[cur - 1]); },
+  quiz: () => { SFX.pop(); startQuiz(cur); },
+  quit: el => { if (armed(el, '再按一次 ← 離開（這次的作答不會記錄）')) renderMap(); },
+  pick: el => answerChoice(el),
+  next: () => { if (!run) return; run.pos++; advance(); },
+  retrygo: () => { run.q = run.queue[0]; run.locked = false; renderQ(); },
+  tile: el => { if (run.locked) return; const k = +el.dataset.k; if (run.picked.includes(k)) return; run.picked.push(k); SFX.pop(); TTS.say(run.tiles[k]); renderOrderLine(); },
+  untile: el => { if (run.locked) return; const k = +el.dataset.k; run.picked = run.picked.filter(x => x !== k); renderOrderLine(); },
+  tclear: () => { if (run.locked) return; run.picked = []; renderOrderLine(); },
+  tcheck: () => checkOrder(),
+  qclk: el => { if (run.locked) return; run.t += +el.dataset.d; setHands($('#qclock'), run.t); SFX.pop(); },
+  ccheck: () => checkClock(),
+  bin: el => dropBin(el.dataset.k, el),
+  lclk: el => { learnT += +el.dataset.d; updLearnClock(); },
+  preset: el => { const [h, m] = el.dataset.t.split(':').map(Number); learnT = nearest(learnT, h * 60 + m); updLearnClock(); },
+  lsay: () => TTS.say(`What time is it? It's ${fmtT(learnT)}.`),
+  readall: el => readAll(+el.dataset.b),
+  zh: () => app.classList.toggle('hide-zh'),
+  speed: () => { const i = RATES.findIndex(x => x[0] === save.rate); save.rate = RATES[(i + 1) % RATES.length][0]; persist(); updateTop(); TTS.say(`Hello, ${LEARNER}!`); },
+  sound: () => { save.sound = !save.sound; persist(); updateTop(); SFX.pop(); },
+  unlock: () => { save.unlockAll = !save.unlockAll; persist(); renderMap(); toast(save.unlockAll ? '🔓 已解鎖全部關卡' : '🔒 恢復依序解鎖'); },
+  reset: el => { if (!armed(el, `再按一次，就會清除 ${LEARNER} 的所有星星紀錄`)) return; save.best = {}; save.unlockAll = false; persist(); renderMap(); toast('已清除闖關紀錄'); },
+  cert: () => renderCert(),
+  print: () => window.print()
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act],[data-say]');
+  if (!el || el.disabled) return;
+  if (el.dataset.say !== undefined) {
+    TTS.say(el.dataset.say);
+    const card = el.closest('.tile,.ph-w,.s4c,.poss-c,.sent,.line') || el;
+    card.classList.add('playing'); setTimeout(() => card.classList.remove('playing'), 700);
+  }
+  const fn = ACTS[el.dataset.act];
+  if (fn) fn(el, e);
+});
+
+$('#brandName').textContent = `${LEARNER}'s English Adventure`;
+document.title = `${LEARNER}'s English Adventure`;
+renderMap();
+})();
+</script>
+</body>
+</html>
