@@ -126,8 +126,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .lv-t .e{display:block;font-size:.82rem;color:var(--a-ink);font-weight:600}
 .lv-t .s{display:block;font-size:.84rem;color:var(--muted);margin:3px 0 4px;line-height:1.35}
 .lv .go{font-size:.85rem;font-weight:700;color:var(--a-ink);background:var(--a-bg);border-radius:999px;padding:1px 10px;margin-left:6px}
-.lv.locked{opacity:.55;filter:grayscale(.8);cursor:not-allowed}
-.lv.locked:hover{transform:none;border-color:var(--line)}
 .foot{margin-top:30px;padding-top:14px;border-top:1px dashed var(--line);color:var(--muted);font-size:.85rem;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
 .foot .links{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .link{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer;color:var(--muted);font-size:.85rem}
@@ -259,6 +257,10 @@ svg.clock{width:min(230px,66vw);height:auto;display:block}
 .fill{height:100%;background:var(--a);border-radius:999px;transition:width .4s}
 .qcount{font-weight:700;font-size:.9rem;color:var(--muted);white-space:nowrap}
 .qcard{text-align:center;padding:20px 16px}
+.qcat{display:inline-block;font-size:.8rem;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:999px;padding:2px 10px;margin-bottom:8px}
+.htext{margin-top:12px;text-align:left}
+.sent.hq{font-weight:700}
+[hidden]{display:none!important}
 .lead{font-size:2.6rem;line-height:1.25;margin-bottom:4px}
 .qtag{display:inline-block;font-weight:700;font-size:.95rem;background:var(--a-bg);color:var(--a-ink);border-radius:999px;padding:2px 12px;margin-bottom:6px}
 .prompt{font-size:1.4rem;font-weight:600;margin:10px 0 4px;line-height:1.35}
@@ -399,11 +401,10 @@ const ico = s => String(s).replace(/BOTTLE/g, BOTTLE);
 
 /* ===================== save ===================== */
 const STORE = 'miller-english-adventure-v1';
-let save = { best: {}, rate: 0.85, sound: true, unlockAll: false };
+let save = { best: {}, rate: 0.85, sound: true };
 try { const s = JSON.parse(localStorage.getItem(STORE)); if (s && typeof s === 'object') save = Object.assign(save, s); } catch (e) {}
 const persist = () => { try { localStorage.setItem(STORE, JSON.stringify(save)); } catch (e) {} };
 const totalStars = () => [1, 2, 3, 4, 5].reduce((s, n) => s + (save.best[n] || 0), 0);
-const isOpen = n => n === 1 || !!save.best[n - 1] || save.unlockAll;
 
 /* ===================== speech (English only) ===================== */
 const TTS = {
@@ -415,7 +416,7 @@ const TTS = {
       this.voice = us.find(v => /Google US English|Samantha|Aria|Jenny|Ava|Natural/i.test(v.name)) || us[0] || vs.find(v => /^en/i.test(v.lang)) || null;
     } catch (e) {}
   },
-  clean: t => String(t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '').replace(/[*\[\]]/g, '').replace(/…/g, ' ').replace(/\s+/g, ' ').trim(),
+  clean: t => String(t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '').replace(/[　-〿㐀-鿿＀-￯]/g, ' ').replace(/[*\[\]]/g, '').replace(/…/g, ' ').replace(/\s+/g, ' ').trim(),
   utter(text) { const u = new SpeechSynthesisUtterance(this.clean(text)); u.lang = 'en-US'; if (this.voice) u.voice = this.voice; u.rate = save.rate; u.pitch = 1.05; return u; },
   say(text) { if (!this.ok || !text) return; this.token++; $$('.reading').forEach(n => n.classList.remove('reading')); speechSynthesis.cancel(); speechSynthesis.speak(this.utter(text)); },
   sayList(list, onStep) {
@@ -541,6 +542,9 @@ const VERBS = [
   ['comb', 'comb[s]', '加 s'], ['brush', 'brush[es]', 'sh 結尾加 es'], ['have', '[has]', '特別變身！']
 ];
 const chip = (t, say) => `<button class="chip" data-say="${esc(say || plain(t))}">${hl(t)}</button>`;
+/* 單字題：英翻中、中翻英 */
+const vEZ = (en, zh, wrong) => ({ type: 'choice', cat: '📚 單字', p: en, say: en, zh: '這是什麼意思？', o: [zh, ...wrong], full: `${en} ＝ ${zh}`, fullSay: en });
+const vZE = (zh, en, wrong) => ({ type: 'choice', cat: '📚 單字', p: `「${zh}」的英文是？`, o: [en, ...wrong], full: `${zh} ＝ ${en}`, fullSay: en });
 
 const LEVELS = [
   /* ---------------- Level 1 ---------------- */
@@ -564,16 +568,19 @@ const LEVELS = [
     ],
     quiz: [
       { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [7, 30], o: ["It's 7:30.", "It's 6:30.", "It's 7:00.", "It's 6:35."], why: '短針（時針）走到 7 和 8 中間，長針（分針）指著 6 ＝ 30 分 → 7:30 七點半。' },
-      { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [2, 0], o: ["It's 2:00.", "It's 12:10.", "It's 3:00.", "It's 12:02."], why: '長針指著 12 ＝ 整點；短針指著 2 → 2:00 兩點整。' },
-      { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [6, 50], o: ["It's 6:50.", "It's 7:50.", "It's 10:30.", "It's 6:10."], why: '短針快到 7 了，但還沒到，所以還是 6 點；長針指著 10 ＝ 50 分 → 6:50。' },
-      { type: 'clock', h: 7, m: 15, why: '長針（分）指著 3 ＝ 15 分；短針（時）在 7 和 8 之間、靠近 7。' },
+      vEZ('brush my teeth', '刷牙', ['梳頭髮', '洗澡', '吃早餐']),
+      vZE('抵達學校', 'arrive at school', ['chat with friends', 'clean my room', 'get dressed']),
       { type: 'listen', pics: 1, say: 'take a shower', o: [{ e: '🚿', t: 'take a shower' }, { e: '🍳', t: 'have breakfast' }, { e: '🪥', t: 'brush my teeth' }, { e: '🏫', t: 'arrive at school' }], why: 'take a shower ＝ 洗澡 🚿' },
       { type: 'listen', pics: 1, say: 'do my homework', o: [{ e: '📝', t: 'do my homework' }, { e: '🧹', t: 'clean my room' }, { e: '💬', t: 'chat with friends' }, { e: '💇', t: 'comb my hair' }], why: 'do my homework ＝ 寫功課 📝' },
+      vEZ('chat with friends', '和朋友聊天', ['整理房間', '吃晚餐', '起床']),
+      { type: 'choice', cat: '📚 單字', lead: '🧹', p: 'Look and choose.', zh: '看圖，選出正確的片語。', o: ['clean my room', 'comb my hair', 'have lunch', 'wake up'], full: 'clean my room ＝ 整理房間', fullSay: 'clean my room', why: '🧹 是掃把，clean my room ＝ 整理房間。' },
       { type: 'choice', lead: '🕛 🍱', p: 'I have lunch ___.', o: ['at noon', 'in the evening', 'at night', 'in the morning'], full: 'I have lunch at noon.', why: '中午 12 點 → at noon（在中午）。' },
       { type: 'choice', lead: '🌙 🧹', tag: '9:45', p: 'He cleans his room at 9:45 ___.', o: ['at night', 'in the morning', 'at noon', 'in the afternoon'], full: 'He cleans his room at 9:45 at night.', why: '晚上 9:45 是夜間 → at night。注意 night 前面用 at，不是 in！' },
       { type: 'choice', lead: '👕 😱', p: "It's late! It's time to ___.", o: ['get dressed', 'take a shower', 'have dinner', 'do my homework'], full: "It's late! It's time to get dressed!", why: "It's time to ＋ 動作 ＝ 該做某事了。圖片是衣服 👕 → get dressed（穿好衣服）。" },
-      { type: 'order', w: ['I', 'wake up', 'at', '6:00', 'in the morning.'], zh: '我早上六點起床。', why: '句子順序：我（I）＋ 做什麼（wake up）＋ at 幾點 ＋ 時段。' },
-      { type: 'order', w: ["It's", 'time', 'to', 'have', 'breakfast.'], zh: '該吃早餐了。', why: "It's time to ＋ 動作：該做某事了。" }
+      { type: 'clock', h: 7, m: 15, why: '長針（分）指著 3 ＝ 15 分；短針（時）在 7 和 8 之間、靠近 7。' },
+      { type: 'hear', talk: ["Hi, I'm Miller.", 'I wake up at 6:30 in the morning.', 'I have breakfast at 7:00.', 'I arrive at school at 7:50.'], ask: 'What time does Miller have breakfast?', o: ['At 7:00.', 'At 6:30.', 'At 7:50.', 'At noon.'], why: '短文說：I have breakfast at 7:00.（我七點吃早餐。）6:30 是起床、7:50 是到學校。' },
+      { type: 'hear', talk: ['Mom: Miller, what time is it?', "Miller: It's 12:00.", "Mom: It's noon. Time to have lunch!"], ask: 'What time is it? What is it time to do?', o: ["It's 12:00. Time to have lunch.", "It's 2:00. Time to have lunch.", "It's 12:00. Time to take a shower.", "It's 7:00. Time to wake up."], why: "Miller 說 It's 12:00.，媽媽說 Time to have lunch!（該吃午餐了！）" },
+      { type: 'order', w: ['I', 'wake up', 'at', '6:00', 'in the morning.'], zh: '我早上六點起床。', why: '句子順序：我（I）＋ 做什麼（wake up）＋ at 幾點 ＋ 時段。' }
     ]
   },
   /* ---------------- Level 2 ---------------- */
@@ -597,20 +604,27 @@ const LEVELS = [
       { k: 'countries', title: '🌍 閱讀：Am I Late? 我遲到了嗎？', sub: '不同國家，對「時間」的想法不一樣！點句子聽朗讀。', items: [
         { e: '🥨', name: 'Germany 德國', lines: [['In Germany, people *arrive early*.', '在德國，人們習慣提早到。'], ['The party is at 8:00. Arrive at 7:50.', '派對八點開始，七點五十分就到。'], ['Arriving on time is *not polite*!', '剛好準時到，反而不太禮貌！']] },
         { e: '⚽', name: 'Brazil 巴西', lines: [['In Brazil, people *arrive late*.', '在巴西，人們習慣晚點到。'], ['The party is at 6:00. You arrive at 6:00.', '派對六點開始，你六點就到了。'], ['Oh no! You are *alone*!', '糟糕！只有你一個人！']] },
-        { e: '🐪', name: 'Saudi Arabia 沙烏地阿拉伯', lines: [['In Saudi Arabia, people *take their time*.', '在沙烏地阿拉伯，人們喜歡慢慢來。'], ["Don't *look at your watch*.", '不要一直看手錶。'], ["It's *rude*!", '那樣很不禮貌！']] }] }
+        { e: '🐪', name: 'Saudi Arabia 沙烏地阿拉伯', lines: [['In Saudi Arabia, people *take their time*.', '在沙烏地阿拉伯，人們喜歡慢慢來。'], ["Don't *look at your watch*.", '不要一直看手錶。'], ["It's *rude*!", '那樣很不禮貌！']] }] },
+      { k: 'cards', title: '🔑 閱讀關鍵字', sub: '這些字會出現在挑戰題裡，先點一點聽發音！', items: [
+        { e: '⏰', en: 'arrive early', zh: '提早到' }, { e: '🐢', en: 'arrive late', zh: '晚到' },
+        { e: '✅', en: 'on time', zh: '準時' }, { e: '🙂', en: 'polite', zh: '有禮貌的' },
+        { e: '😠', en: 'rude', zh: '不禮貌的' }, { e: '🧍', en: 'alone', zh: '獨自一人' },
+        { e: '☕', en: 'take their time', zh: '慢慢來' }] }
     ],
     quiz: [
       { type: 'choice', p: `What time ___ ${LEARNER} get dressed?`, o: ['does', 'do', 'is', 'are'], full: `What time does ${LEARNER} get dressed?`, why: `${LEARNER} 是「一個人」（第三人稱單數）→ 問句用 does。I / you 才用 do。` },
       { type: 'choice', lead: '🧒 👕', tag: '7:15', p: `${LEARNER} ___ dressed at 7:15 in the morning.`, o: ['gets', 'get', 'getting', 'is get'], full: `${LEARNER} gets dressed at 7:15 in the morning.`, why: `${LEARNER} 是第三人稱單數，肯定句的動詞要加 s：get → gets。` },
       { type: 'choice', lead: '🍲', tag: '6:00', p: 'She ___ dinner at 6:00 in the evening.', o: ['has', 'have', 'haves', 'having'], full: 'She has dinner at 6:00 in the evening.', why: 'have 是特別變身：He / She ＋ has。' },
       { type: 'choice', lead: '🪥', p: 'He ___ his teeth every morning.', o: ['brushes', 'brushs', 'brush', 'brushing'], full: 'He brushes his teeth every morning.', why: '字尾是 sh 的動詞要加 es：brush → brushes。' },
-      { type: 'choice', clock: [6, 0], p: `What time does ${LEARNER} wake up?`, say: `What time does ${LEARNER} wake up?`, o: [`${LEARNER} wakes up at 6:00 in the morning.`, `${LEARNER} wake up at 6:00 in the morning.`, `${LEARNER} wakes up at 6:00 at night.`, `${LEARNER} wakes up in 6:00 in the morning.`], why: `${LEARNER} → wakes（加 s）；幾點用 at 6:00；早上用 in the morning。` },
+      vEZ('rude', '不禮貌的', ['有禮貌的', '獨自一人', '忙碌的']),
+      vZE('準時', 'on time', ['early', 'late', 'alone']),
+      vEZ('arrive early', '提早到', ['晚到', '準時到', '慢慢來']),
       { type: 'order', w: ['What time', 'does', LEARNER, 'have', 'lunch?'], zh: `${LEARNER} 幾點吃午餐？`, why: '問句用 does 時，後面的動詞要用原形 have（不是 has）。' },
-      { type: 'listen', say: 'paint', o: ['paint', 'pain', 'play', 'cake'], why: 'p-ai-n-t：ai 唸長音 /eɪ/，最後還有 t 的聲音。' },
+      { type: 'hear', talk: ['This is Jake.', 'Jake wakes up at 7:00.', 'He gets dressed at 7:15.', 'He has breakfast at 7:30.'], ask: 'What time does Jake get dressed?', o: ['At 7:15.', 'At 7:00.', 'At 7:30.', 'At 7:50.'], why: '短文說：He gets dressed at 7:15.（他 7:15 穿好衣服。）7:00 是起床、7:30 是吃早餐。' },
       { type: 'sort', p: '這些字都唸 Long a /eɪ/，它們是哪一種拼法？', hint: '仔細看拼字：字裡有 ai？ay？還是 a＿e（a 和 e 中間隔一個字母）？', bins: [{ k: 'ai', t: 'ai' }, { k: 'ay', t: 'ay' }, { k: 'a_e', t: 'a_e' }], items: [{ t: 'r[ai]n', e: '🌧️', b: 'ai' }, { t: 'pl[ay]', e: '🎮', b: 'ay' }, { t: 'c[a]k[e]', e: '🎂', b: 'a_e' }, { t: 'tr[ai]n', e: '🚆', b: 'ai' }, { t: 'h[ay]', e: '🌾', b: 'ay' }, { t: 'l[a]t[e]', e: '⏰', b: 'a_e' }] },
-      { type: 'choice', lead: '🥨', tag: 'Germany 德國', p: 'The party is at 8:00. When do you arrive?', say: 'In Germany, the party is at 8:00. When do you arrive?', o: ['At 7:50.', 'At 8:30.', 'At 9:00.', 'At 8:15.'], full: 'In Germany, arrive at 7:50.', why: '德國人習慣提早到：約 8:00，最好 7:50 就到。剛好準時到反而不夠禮貌！' },
-      { type: 'choice', lead: '⚽', tag: 'Brazil 巴西', p: 'The party is at 6:00. You arrive at 6:00. You are ___!', o: ['alone', 'rude', 'early', 'busy'], full: 'You are alone!', why: '巴西人習慣晚點到。6:00 準時到的話，可能只有你一個人（alone）！' },
-      { type: 'choice', lead: '🐪', tag: 'Saudi Arabia 沙烏地阿拉伯', p: "In Saudi Arabia, it's rude to ___.", o: ['look at your watch', 'take your time', 'chat with friends', 'have dinner'], full: "In Saudi Arabia, it's rude to look at your watch.", why: '沙烏地阿拉伯的人喜歡慢慢來（take their time），和人相處時一直看手錶很不禮貌（rude）。' }
+      { type: 'choice', cat: '📖 閱讀', lead: '🥨', tag: 'Germany 德國', p: 'The party is at 8:00. When do you arrive?', say: 'In Germany, the party is at 8:00. When do you arrive?', o: ['At 7:50.', 'At 8:30.', 'At 9:00.', 'At 8:15.'], full: 'In Germany, arrive at 7:50.', why: '德國人習慣提早到：約 8:00，最好 7:50 就到。剛好準時到反而不夠禮貌！' },
+      { type: 'choice', cat: '📖 閱讀', lead: '⚽', tag: 'Brazil 巴西', p: 'The party is at 6:00. You arrive at 6:00. You are ___!', o: ['alone', 'rude', 'early', 'busy'], full: 'You are alone!', why: '巴西人習慣晚點到。6:00 準時到的話，可能只有你一個人（alone）！' },
+      { type: 'hear', talk: ['Sam is in Saudi Arabia.', 'He is with his friends.', 'Sam looks at his watch many times.'], ask: 'Is it polite?', o: ["No, it's rude.", "Yes, it's polite.", 'Yes, Sam is early.', 'No, Sam is alone.'], why: '沙烏地阿拉伯的人喜歡慢慢來（take their time）；和朋友在一起時一直看手錶，是不禮貌的（rude）。' }
     ]
   },
   /* ---------------- Level 3 ---------------- */
@@ -629,14 +643,17 @@ const LEVELS = [
     quiz: [
       { type: 'listen', pics: 1, say: 'umbrella', o: [{ e: '☂️', t: 'umbrella' }, { e: '⌚', t: 'watch' }, { e: '🔑', t: 'key' }, { e: '📓', t: 'notebook' }], why: 'umbrella ＝ 雨傘 ☂️' },
       { type: 'listen', pics: 1, say: 'smartphone', o: [{ e: '📱', t: 'smartphone' }, { e: '👛', t: 'wallet' }, { e: '📎', t: 'paper clip' }, { e: '👓', t: 'glasses' }], why: 'smartphone ＝ 智慧型手機 📱' },
-      { type: 'listen', pics: 1, say: 'water bottle', o: [{ e: 'BOTTLE', t: 'water bottle' }, { e: '🍱', t: 'lunch box' }, { e: '🖍️', t: 'colored pencils' }, { e: '🏫', t: 'classroom' }], why: 'water bottle ＝ 水壺' },
-      { type: 'choice', lead: '👛', p: 'What is it?', zh: '這是什麼？', o: ['wallet', 'watch', 'water bottle', 'notebook'], full: "It's a wallet.", why: 'wallet ＝ 皮夾、錢包 👛' },
+      vEZ('paper clip', '迴紋針', ['彩色鉛筆', '筆記本', '鑰匙']),
+      vZE('便當盒', 'lunch box', ['water bottle', 'wallet', 'classroom']),
+      { type: 'choice', cat: '📚 單字', lead: '☂️', p: 'Which spelling is correct?', zh: '雨傘的英文，哪一個拼字是對的？', o: ['umbrella', 'umbrela', 'unbrella', 'umbrrella'], full: 'umbrella ＝ 雨傘', fullSay: 'umbrella', why: 'u-m-b-r-e-l-l-a：中間是 m，後面有兩個 l。' },
+      { type: 'choice', cat: '📚 單字', lead: '⌚ ⌚', p: 'one watch → two ___', zh: 'watch 的複數是？', o: ['watches', 'watchs', 'watch', 'watchies'], full: 'one watch, two watches', why: '字尾是 ch 的名詞，複數加 es：watch → watches。' },
       { type: 'choice', scene: { item: '⌚', n: 1, far: 0 }, p: '___ is my watch.', o: ['This', 'That', 'These', 'Those'], full: 'This is my watch.', why: '一個（單數）＋ 在身邊（近）→ This。' },
       { type: 'choice', scene: { item: '🔑', n: 3, far: 1 }, p: '___ are my keys.', o: ['Those', 'These', 'This', 'That'], full: 'Those are my keys.', why: '很多個（複數）＋ 離得遠 → Those。' },
       { type: 'choice', scene: { item: '📓', n: 2, far: 0 }, p: '___ are my notebooks.', o: ['These', 'Those', 'This', 'That'], full: 'These are my notebooks.', why: '很多個（複數）＋ 近 → These。' },
       { type: 'choice', scene: { item: '☂️', n: 1, far: 1 }, p: '___ is my umbrella.', o: ['That', 'This', 'These', 'Those'], full: 'That is my umbrella.', why: '一個（單數）＋ 遠 → That。' },
-      { type: 'choice', lead: '👓', p: "Look! ___ my glasses.", o: ["They're", "It's", 'This', 'That'], full: "Look! They're my glasses.", why: "glasses（眼鏡）永遠是複數，所以用 They're。" },
-      { type: 'sort', p: "單數用 It's…，複數用 They're…，請分類！", hint: '看字尾有沒有 s？別忘了 glasses 永遠是複數！', bins: [{ k: 's', t: "It's…", sub: '單數・一個' }, { k: 'p', t: "They're…", sub: '複數・兩個以上' }], items: [{ t: 'wallet', e: '👛', b: 's' }, { t: 'keys', e: '🔑', b: 'p' }, { t: 'glasses', e: '👓', b: 'p' }, { t: 'smartphone', e: '📱', b: 's' }, { t: 'colored pencils', e: '🖍️', b: 'p' }, { t: 'umbrella', e: '☂️', b: 's' }] }
+      { type: 'hear', talk: ["Hi, I'm Miller.", 'Look at my bag.', 'I have a notebook, a lunch box and two keys.'], ask: "What's in Miller's bag?", o: ['A notebook, a lunch box and two keys.', 'An umbrella and glasses.', 'A smartphone and a wallet.', 'Colored pencils and a watch.'], why: '短文說：I have a notebook, a lunch box and two keys.（我有一本筆記本、一個便當盒和兩把鑰匙。）' },
+      { type: 'hear', talk: ['Welcome to our classroom!', 'These are our notebooks.', 'Those are our colored pencils.'], ask: 'What are those?', o: ["They're colored pencils.", "They're notebooks.", "It's a classroom.", "It's an umbrella."], why: '短文說：Those are our colored pencils.（那些是我們的彩色鉛筆。）These 才是筆記本。' },
+      { type: 'sort', p: "單數用 It's…，複數用 They're…，請分類！", hint: '看字尾有沒有 s？別忘了 glasses 永遠是複數！', bins: [{ k: 's', t: "It's…", sub: '單數・一個' }, { k: 'p', t: "They're…", sub: '複數・兩個以上' }], items: [{ t: 'wallet', e: '👛', b: 's' }, { t: 'glasses', e: '👓', b: 'p' }, { t: 'colored pencils', e: '🖍️', b: 'p' }, { t: 'smartphone', e: '📱', b: 's' }] }
     ]
   },
   /* ---------------- Level 4 ---------------- */
@@ -679,9 +696,12 @@ const LEVELS = [
       { type: 'choice', lead: '🧒🧒 🍱🍱', p: `${LEARNER} and Jake have lunch boxes. They're ___ lunch boxes.`, o: ['their', 'our', 'his', 'her'], full: "They're their lunch boxes.", why: '兩個人（他們）的 → their。our 是「我們的」。' },
       { type: 'choice', lead: '👧 BOTTLE', p: 'Olivia is a girl. This is ___ water bottle.', o: ['her', 'his', 'its', 'their'], full: 'This is her water bottle.', why: '女生 → 她的 ＝ her；男生 → 他的 ＝ his。' },
       { type: 'choice', lead: '👦👦 🖍️🖍️', p: '男孩們的彩色鉛筆', o: ["the boys' colored pencils", "the boy's colored pencils", "the boys's colored pencils", 'the boys colored pencil'], why: "boys 是複數、字尾已經有 s → 直接加 '：the boys'。" },
+      vEZ('honey', '蜂蜜', ['蜜蜂', '鑰匙', '巷弄']),
+      vZE('擁抱', 'hug', ['help', 'share', 'feelings']),
       { type: 'order', w: ['Whose', 'watch', 'is', 'this?'], zh: '這是誰的手錶？', why: 'Whose ＋ 物品 ＋ is this?' },
       { type: 'sort', p: '長母音 e 有三種拼法，把單字放進對的家族！', hint: '仔細看拼字：字裡有 ea？ee？還是 ey？', bins: [{ k: 'ea', t: 'ea' }, { k: 'ee', t: 'ee' }, { k: 'ey', t: 'ey' }], items: [{ t: 'b[ea]n', e: '🫘', b: 'ea' }, { t: 'b[ee]', e: '🐝', b: 'ee' }, { t: 'k[ey]', e: '🔑', b: 'ey' }, { t: 'l[ea]f', e: '🍃', b: 'ea' }, { t: 'f[ee]t', e: '🦶', b: 'ee' }, { t: 'hon[ey]', e: '🍯', b: 'ey' }] },
-      { type: 'choice', lead: '😢', p: 'Your friend is sad. What can you do?', say: 'Your friend is sad. What can you do?', o: ['Give a hug. 🤗', 'Look at your watch. ⌚', 'Eat all the food. 🍔', 'Go home. 🏠'], why: '分享不只是玩具和食物，也可以分享心情。朋友難過時，給予幫助或一個擁抱，表示我們關心彼此（care about each other）。' }
+      { type: 'hear', talk: ['Teacher: Whose umbrella is this?', "Teacher: Is it Henry's umbrella?", "Henry: No, it isn't. It's Vicky's umbrella."], ask: 'Whose umbrella is it?', o: ["It's Vicky's umbrella.", "It's Henry's umbrella.", "It's the teacher's umbrella.", "They're Vicky's umbrellas."], why: "Henry 說：It's Vicky's umbrella.（那是 Vicky 的雨傘。）一把雨傘是單數，所以用 It's。" },
+      { type: 'hear', talk: ['Nate is sad today.', 'Jake gives Nate a hug.', 'Jake shares his lunch with Nate.', 'Now Nate is happy!'], ask: 'What does Jake share with Nate?', o: ['His lunch.', 'His umbrella.', 'His watch.', 'His glasses.'], why: '短文說：Jake shares his lunch with Nate.（Jake 和 Nate 分享午餐。）擁抱和分享，都是關心朋友的方法！' }
     ]
   },
   /* ---------------- Level 5 ---------------- */
@@ -719,19 +739,20 @@ const LEVELS = [
         </ol>` }
     ],
     quiz: [
-      { type: 'choice', lead: '🐧', p: 'What is the main idea?', zh: '這篇文章的主旨是哪一句？', o: ['Little penguins are busy every day.', 'Little penguins live in Australia.', 'At night, little penguins are noisy.', 'Little penguins hunt for fish.'], why: '「每天都很忙」是整篇的大傘 ☂️；住在澳洲、捕魚、晚上很吵，都是說明的細節 💧。' },
-      { type: 'choice', lead: '🐧 🌊', p: 'What time do the penguins go to the sea?', say: 'What time do the penguins go to the sea?', o: ['At 7:00 in the morning.', 'At 6:00 in the evening.', 'At 7:00 at night.', 'At noon.'], why: '課文：At 7:00 in the morning, they go to the sea together.' },
-      { type: 'choice', lead: '🐧 🏠', p: 'What time do they come home?', say: 'What time do they come home?', o: ['At 6:00 in the evening.', 'At 7:00 in the morning.', 'At 6:00 in the morning.', 'At 9:45 at night.'], why: '課文：At 6:00 in the evening, they come home.' },
-      { type: 'choice', lead: '📏', p: 'A little penguin is about ___ tall.', o: ['35 cm', '1.2 cm', '4 cm', '135 cm'], full: 'A little penguin is about 35 cm tall.', fullSay: 'A little penguin is about 35 centimeters tall.', why: '小企鵝身高約 35 公分、體重約 1.2 公斤，每次小睡大約 4 分鐘。' },
-      { type: 'clock', h: 9, m: 45, why: '長針（分）指著 9 ＝ 45 分；短針（時）在 9 和 10 之間、快到 10 了。' },
+      { type: 'choice', cat: '📖 閱讀', lead: '🐧', p: 'What is the main idea?', zh: '這篇文章的主旨是哪一句？', o: ['Little penguins are busy every day.', 'Little penguins live in Australia.', 'At night, little penguins are noisy.', 'Little penguins hunt for fish.'], why: '「每天都很忙」是整篇的大傘 ☂️；住在澳洲、捕魚、晚上很吵，都是說明的細節 💧。' },
+      { type: 'hear', talk: ['Little penguins are busy every day.', 'At 7:00 in the morning, they go to the sea together.', 'They hunt for fish.'], ask: 'What time do the penguins go to the sea?', o: ['At 7:00 in the morning.', 'At 6:00 in the evening.', 'At 7:00 at night.', 'At noon.'], why: '短文說：At 7:00 in the morning, they go to the sea together.' },
+      { type: 'hear', talk: ['At 6:00 in the evening, the penguins come home.', 'At night, they are very noisy.', 'They chat with their friends!'], ask: 'What are the penguins like at night?', o: ['They are very noisy.', 'They are at school.', 'They are alone.', 'They are late.'], why: '短文說：At night, they are very noisy.（晚上牠們非常吵鬧。）' },
+      { type: 'hear', talk: ['Penny is a little penguin.', 'She lives in Australia.', 'She is about 35 centimeters tall.'], ask: 'Where does Penny live?', o: ['In Australia.', 'In Germany.', 'In Brazil.', 'In Saudi Arabia.'], why: '短文說：She lives in Australia.（牠住在澳洲。）' },
+      { type: 'hear', talk: ['Little penguins take many naps.', 'They sleep in the day and at night.', 'Each nap is about 4 minutes.'], ask: 'How long is each nap?', o: ['About 4 minutes.', 'About 4 hours.', 'About 35 minutes.', 'About 1 hour.'], why: '短文說：Each nap is about 4 minutes.（每次小睡大約 4 分鐘。）' },
+      vEZ('noisy', '吵鬧的', ['忙碌的', '一起', '每一個']),
+      vZE('獵捕', 'hunt', ['sea', 'busy', 'every']),
       { type: 'choice', p: 'What time is it?', say: 'What time is it?', clock: [10, 15], o: ["It's 10:15.", "It's 3:50.", "It's 10:03.", "It's 2:50."], why: '短針（時）剛過 10，長針（分）指著 3 ＝ 15 分。別把長短針看反了，不是 3:50 喔！' },
       { type: 'choice', lead: '🍲 🌇', tag: '6:30', p: `${LEARNER} has dinner ___ 6:30 ___ the evening.`, o: ['at … in', 'in … at', 'at … at', 'in … in'], full: `${LEARNER} has dinner at 6:30 in the evening.`, why: '幾點幾分用 at（at 6:30）；時段用 in the evening。' },
       { type: 'choice', lead: '👓', p: "Whose glasses are these? ___ Henry's glasses.", o: ["They're", "It's", 'This is', 'Is'], full: "They're Henry's glasses.", why: "glasses 是複數 → They're。" },
       { type: 'choice', lead: '👛', p: "Whose wallet is that? ___ Nate's wallet.", o: ["It's", "They're", 'These are', 'Are'], full: "It's Nate's wallet.", why: "wallet 是單數 → It's。" },
-      { type: 'choice', lead: '🏫', tag: '我們的教室', p: 'This is ___ classroom.', o: ['our', 'your', 'their', 'its'], full: 'This is our classroom.', why: 'our ＝ 我們的；your ＝ 你的／你們的；their ＝ 他們的。' },
       { type: 'choice', lead: '👧👧 👛👛', p: '女孩們的皮夾', o: ["the girls' wallets", "the girl's wallets", "the girls's wallets", "the girls wallet's"], why: "girls 字尾已經有 s → 只加 '；單數人名才加 's（例如 Vicky's）。" },
       { type: 'order', w: [LEARNER, 'wakes up', 'at', '6:30', 'in the morning.'], zh: `${LEARNER} 早上六點半起床。`, why: `${LEARNER} 是第三人稱單數 → wakes up（加 s）。` },
-      { type: 'sort', p: 'Long a 還是 Long e？聽一聽、看一看！', hint: 'ai、ay、a_e 是 Long a；ea、ee、ey 是 Long e。', bins: [{ k: 'a', t: 'Long a', sub: '/eɪ/ ai・ay・a_e' }, { k: 'e', t: 'Long e', sub: '/iː/ ea・ee・ey' }], items: [{ t: 'c[a]k[e]', e: '🎂', b: 'a' }, { t: 'b[ee]', e: '🐝', b: 'e' }, { t: 'r[ai]n', e: '🌧️', b: 'a' }, { t: 'l[ea]f', e: '🍃', b: 'e' }, { t: 'pl[ay]', e: '🎮', b: 'a' }, { t: 'k[ey]', e: '🔑', b: 'e' }] }
+      { type: 'sort', p: 'Long a 還是 Long e？聽一聽、看一看！', hint: 'ai、ay、a_e 是 Long a；ea、ee、ey 是 Long e。', bins: [{ k: 'a', t: 'Long a', sub: '/eɪ/ ai・ay・a_e' }, { k: 'e', t: 'Long e', sub: '/iː/ ea・ee・ey' }], items: [{ t: 'c[a]k[e]', e: '🎂', b: 'a' }, { t: 'b[ee]', e: '🐝', b: 'e' }, { t: 'pl[ay]', e: '🎮', b: 'a' }, { t: 'k[ey]', e: '🔑', b: 'e' }] }
     ]
   }
 ];
@@ -774,15 +795,15 @@ function armed(el, msg) {
 function renderMap() {
   run = null;
   const total = totalStars(), allDone = LEVELS.every(L => save.best[L.n]);
-  const next = LEVELS.find(L => !save.best[L.n]);
+  const todo = LEVELS.filter(L => !save.best[L.n]).map(L => L.n);
   const msg = allDone ? `${LEARNER} 全部過關了，好厲害！🎉 快去領取你的證書吧！`
-    : total === 0 ? `Hi, ${LEARNER}! 👋 我是小企鵝 Penny。跟我一起完成 5 個關卡，收集 15 顆星星吧！`
-    : `繼續加油，${LEARNER}！下一站：第 ${next.n} 關「${next.title}」。`;
+    : total === 0 ? `Hi, ${LEARNER}! 👋 我是小企鵝 Penny。5 個關卡可以自由選，想先挑戰哪一關都可以，收集 15 顆星星吧！`
+    : `繼續加油，${LEARNER}！還沒挑戰的關卡：第 ${todo.join('、')} 關。`;
   const lvCard = L => {
-    const open = isOpen(L.n), st = save.best[L.n] || 0;
-    return `<button class="lv${open ? '' : ' locked'}" data-lv="${L.n}" data-act="open" data-n="${L.n}"${open ? '' : ' aria-disabled="true"'}>
-      <span class="num"><b>${L.n}</b>${open ? L.icon : '🔒'}</span>
-      <span class="lv-t"><span class="t">${esc(L.title)}</span><span class="e">${esc(L.en)}</span><span class="s">${esc(L.sub)}</span>${starsHTML(st)}${!st && open ? '<span class="go">開始 ▶</span>' : ''}</span>
+    const st = save.best[L.n] || 0;
+    return `<button class="lv" data-lv="${L.n}" data-act="open" data-n="${L.n}">
+      <span class="num"><b>${L.n}</b>${L.icon}</span>
+      <span class="lv-t"><span class="t">${esc(L.title)}</span><span class="e">${esc(L.en)}</span><span class="s">${esc(L.sub)}</span>${starsHTML(st)}<span class="go">${st ? '再挑戰 ↻' : '開始 ▶'}</span></span>
     </button>`;
   };
   show(`
@@ -799,7 +820,6 @@ function renderMap() {
       <div>📖 內容依據：Unit 1 What a Day!・Unit 2 In the Classroom・CLIL Reading 1・Review 1</div>
       <div>🔊 朗讀使用瀏覽器內建英文語音（建議使用 Chrome 或 Edge）${TTS.ok ? '' : '　⚠️ 這個瀏覽器不支援朗讀'}</div>
       <div class="links">
-        <button class="link" data-act="unlock">${save.unlockAll ? '🔒 恢復依序解鎖' : '🔓 家長／老師：解鎖全部關卡'}</button>
         <button class="link" data-act="reset">🗑️ 清除闖關紀錄</button>
       </div>
     </footer>`);
@@ -874,6 +894,17 @@ function readAll(bi) {
 
 /* ===================== quiz engine ===================== */
 const ptsOf = q => q.type === 'sort' ? q.items.length : 1;
+const catOf = q => q.cat || (q.type === 'hear' ? '🎧 聽力閱讀' : q.type === 'listen' ? '🎧 聽力・單字' : (q.type === 'clock' || q.clock) ? '⏰ 看時鐘' : q.type === 'sort' ? '🗂️ 分類' : q.type === 'order' ? '🧩 排句子' : '✏️ 句型');
+function optsHTML(q) {
+  const opts = shuffle(q.o.map((o, i) => ({ o, ok: i === 0 })));
+  const long = !q.pics && q.o.some(o => String(o).length > 26);
+  return `<div class="opts${q.pics ? ' pics' : ''}${long ? ' long' : ''}">${opts.map(x => `<button class="opt" data-act="pick" data-ok="${x.ok ? 1 : 0}">${q.pics ? `<span class="pe">${ico(x.o.e)}</span><span class="pl">${esc(x.o.t)}</span>` : esc(x.o)}</button>`).join('')}</div>`;
+}
+function playHear() {
+  const q = run && run.q; if (!q || q.type !== 'hear') return;
+  const nodes = $$('#htext .sent');
+  TTS.sayList([...q.talk, q.ask], i => nodes.forEach((n, j) => n.classList.toggle('reading', j === i)));
+}
 const fullOf = q => q.full || (q.type === 'order' ? q.w.join(' ') : q.type === 'clock' ? `It's ${q.h}:${pad(q.m)}.` : typeof q.o[0] === 'string' ? q.o[0] : q.o[0].t);
 const sayOf = q => q.fullSay || fullOf(q);
 const blank = s => esc(s).replace(/___/g, '<span class="blank">　?　</span>');
@@ -933,17 +964,22 @@ function renderQ() {
     body = `<p class="prompt">${esc(q.p)}</p><div class="sort-stage" id="stage"></div>
       <div class="bins" style="--n:${q.bins.length}">${q.bins.map(b => `<button class="bin" data-act="bin" data-k="${b.k}"><span class="bt">${esc(b.t)}</span>${b.sub ? `<span class="bs">${esc(b.sub)}</span>` : ''}<span class="got"></span></button>`).join('')}</div>
       <div class="sort-msg" id="sortMsg" aria-live="polite"></div>`;
+  } else if (q.type === 'hear') {
+    body = `<button class="big-listen" data-act="hplay" aria-label="播放短文和問題">🎧</button>
+      <p class="prompt sm">聽短文和問題，選出正確的答案！</p>
+      <div class="row-c" style="margin-top:8px"><button class="say-btn" data-act="hplay">▶ 再聽一次</button><button class="say-btn" data-say="${esc(q.ask)}">❓ 只聽問題</button><button class="say-btn" data-act="htext">📖 看文字</button></div>
+      <div class="htext" id="htext" hidden><div class="story">${q.talk.map(t => `<button class="sent" data-say="${esc(t)}">${esc(t)}</button>`).join('')}<button class="sent hq" data-say="${esc(q.ask)}">❓ ${esc(q.ask)}</button></div></div>
+      ${optsHTML(q)}`;
   } else {
-    const opts = shuffle(q.o.map((o, i) => ({ o, ok: i === 0 })));
-    const long = !q.pics && q.o.some(o => String(o).length > 26);
     const prompt = q.type === 'listen'
       ? `<button class="big-listen" data-say="${esc(q.say)}" aria-label="播放題目">🔊</button><p class="prompt sm">${q.pics ? '聽一聽，選出正確的圖片！' : '聽一聽，選出你聽到的單字！'}</p>`
       : `<p class="prompt">${blank(q.p)}${q.say ? ` <button class="say-btn" data-say="${esc(q.say)}" aria-label="聽題目">🔊</button>` : ''}</p>${q.zh ? `<p class="qzh">${esc(q.zh)}</p>` : ''}`;
-    body = `${visualHTML(q)}${prompt}<div class="opts${q.pics ? ' pics' : ''}${long ? ' long' : ''}">${opts.map(x => `<button class="opt" data-act="pick" data-ok="${x.ok ? 1 : 0}">${q.pics ? `<span class="pe">${ico(x.o.e)}</span><span class="pl">${esc(x.o.t)}</span>` : esc(x.o)}</button>`).join('')}</div>`;
+    body = `${visualHTML(q)}${prompt}${optsHTML(q)}`;
   }
-  show(`${levelHead(run.L, 'quiz')}${barHTML()}<section class="card qcard" id="qcard">${body}<div id="fb" aria-live="polite"></div></section>`, run.n);
+  show(`${levelHead(run.L, 'quiz')}${barHTML()}<section class="card qcard" id="qcard"><span class="qcat">${catOf(q)}</span>${body}<div id="fb" aria-live="polite"></div></section>`, run.n);
   if (q.type === 'order') renderOrderLine();
   if (q.type === 'sort') showSortItem();
+  else if (q.type === 'hear') setTimeout(playHear, 300);
   else {
     const s = q.type === 'clock' ? `It's ${q.h}:${pad(q.m)}.` : q.say;
     if (s) setTimeout(() => TTS.say(s), 250);
@@ -974,6 +1010,7 @@ function answerChoice(btn) {
   box.classList.add('done');
   $$('.opt', box).forEach(b => { b.disabled = true; if (b.dataset.ok === '1') b.classList.add('ok'); });
   if (!ok) btn.classList.add('bad', 'shake');
+  const ht = $('#htext'); if (ht) ht.hidden = false;
   resolve(ok);
 }
 function renderOrderLine() {
@@ -1045,16 +1082,17 @@ function finish() {
   save.best[run.n] = Math.max(prev, stars); persist();
   const L = run.L, n = run.n;
   const msg = stars === 3 ? `滿分表現！${LEARNER} 太厲害了！` : stars === 2 ? '很棒！再挑戰一次就有機會拿到 3 顆星！' : '完成關卡了！看看下面的錯題，再挑戰一次會更好！';
-  const qLabel = q => q.type === 'listen' ? `🎧 聽力：${q.say}` : q.type === 'order' ? `🧩 排句子：${q.zh}` : q.type === 'clock' ? '⏰ 撥時鐘' : `${q.clock ? '⏰ 看時鐘：' : '❓ '}${q.p.replace(/___/g, '＿＿')}`;
+  const qLabel = q => q.type === 'hear' ? `🎧 聽力閱讀：${q.ask}` : q.type === 'listen' ? `🎧 聽力：${q.say}` : q.type === 'order' ? `🧩 排句子：${q.zh}` : q.type === 'clock' ? '⏰ 撥時鐘' : `${q.clock ? '⏰ 看時鐘：' : '❓ '}${q.p.replace(/___/g, '＿＿')}`;
   const items = run.missed.map(q => `<li><span class="mq">${esc(qLabel(q))}</span><span class="ma">✔ ${esc(fullOf(q))}</span><button class="say-btn" data-say="${esc(sayOf(q))}" aria-label="聽">🔊</button></li>`)
     .concat(run.missedSort.map(s => `<li><span class="mq">🗂️ 分類：${esc(s.w)}</span><span class="ma">✔ ${esc(s.bin)}</span><button class="say-btn" data-say="${esc(s.w)}" aria-label="聽">🔊</button></li>`));
-  const nextBtn = n < 5 ? `<button class="btn" data-act="open" data-n="${n + 1}">下一關 ▶</button>` : `<button class="btn" data-act="cert">🎓 領取證書</button>`;
+  const allDone = LEVELS.every(x => save.best[x.n]);
+  const nextBtn = (allDone ? '<button class="btn" data-act="cert">🎓 領取證書</button>' : '') + (n < 5 ? `<button class="btn" data-act="open" data-n="${n + 1}">下一關 ▶</button>` : '');
   show(`${levelHead(L, 'result')}<section class="card center">
       <div class="big-stars">${[1, 2, 3].map(i => `<span class="${i <= stars ? 'on' : ''}">★</span>`).join('')}</div>
       <h3>第 ${n} 關完成！</h3>
       <p class="score">第一次就答對 ${run.good} / ${run.total}（${Math.round(pct * 100)}%）</p>
       <p style="margin-top:6px">${msg}</p>
-      ${prev === 0 && n < 5 ? `<span class="unlock">🔓 解鎖第 ${n + 1} 關：${esc(LEVELS[n].title)}</span>` : ''}
+      ${prev === 0 && allDone ? '<span class="unlock">🎓 5 關都完成了，可以領取證書囉！</span>' : ''}
       ${prev && stars > prev ? `<span class="unlock">⬆️ 刷新紀錄：${prev} → ${stars} 顆星</span>` : ''}
       ${items.length ? `<div class="review"><h4>📒 錯題回顧（點 🔊 再聽一次）</h4><ul>${items.join('')}</ul></div>` : ''}
       <div class="row-c"><button class="btn ghost" data-act="quiz">🔁 再玩一次</button><button class="btn ghost" data-act="map">🗺️ 回到地圖</button>${nextBtn}</div>
@@ -1088,7 +1126,7 @@ function renderCert() {
 /* ===================== events ===================== */
 const ACTS = {
   map: () => renderMap(),
-  open: el => { const n = +el.dataset.n; if (!isOpen(n)) { SFX.bad(); toast('🔒 先完成前一關，就能解鎖這一關喔！'); return; } SFX.pop(); renderLearn(LEVELS[n - 1]); },
+  open: el => { SFX.pop(); renderLearn(LEVELS[+el.dataset.n - 1]); },
   learn: () => { SFX.pop(); renderLearn(LEVELS[cur - 1]); },
   quiz: () => { SFX.pop(); startQuiz(cur); },
   quit: el => { if (armed(el, '再按一次 ← 離開（這次的作答不會記錄）')) renderMap(); },
@@ -1101,6 +1139,8 @@ const ACTS = {
   tcheck: () => checkOrder(),
   qclk: el => { if (run.locked) return; run.t += +el.dataset.d; setHands($('#qclock'), run.t); SFX.pop(); },
   ccheck: () => checkClock(),
+  hplay: () => playHear(),
+  htext: () => { const h = $('#htext'); if (h) h.hidden = !h.hidden; },
   bin: el => dropBin(el.dataset.k, el),
   lclk: el => { learnT += +el.dataset.d; updLearnClock(); },
   preset: el => { const [h, m] = el.dataset.t.split(':').map(Number); learnT = nearest(learnT, h * 60 + m); updLearnClock(); },
@@ -1109,8 +1149,7 @@ const ACTS = {
   zh: () => app.classList.toggle('hide-zh'),
   speed: () => { const i = RATES.findIndex(x => x[0] === save.rate); save.rate = RATES[(i + 1) % RATES.length][0]; persist(); updateTop(); TTS.say(`Hello, ${LEARNER}!`); },
   sound: () => { save.sound = !save.sound; persist(); updateTop(); SFX.pop(); },
-  unlock: () => { save.unlockAll = !save.unlockAll; persist(); renderMap(); toast(save.unlockAll ? '🔓 已解鎖全部關卡' : '🔒 恢復依序解鎖'); },
-  reset: el => { if (!armed(el, `再按一次，就會清除 ${LEARNER} 的所有星星紀錄`)) return; save.best = {}; save.unlockAll = false; persist(); renderMap(); toast('已清除闖關紀錄'); },
+  reset: el => { if (!armed(el, `再按一次，就會清除 ${LEARNER} 的所有星星紀錄`)) return; save.best = {}; persist(); renderMap(); toast('已清除闖關紀錄'); },
   cert: () => renderCert(),
   print: () => window.print()
 };
