@@ -333,6 +333,28 @@ svg.clock{width:min(230px,66vw);height:auto;display:block}
 .review li{background:var(--card-2);border-radius:12px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
 .review .mq{color:var(--muted);font-size:.9rem;flex:1 1 100%}
 .review .ma{font-weight:600;color:var(--ok)}
+/* home */
+.home-h{text-align:center;margin:26px 0 18px}
+.home-h h2{font-size:1.9rem}
+.home-h p{color:var(--muted);margin-top:4px}
+.kids{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.kid{display:flex;align-items:center;gap:16px;text-align:left;border:3px solid var(--a);background:var(--card);border-radius:26px;padding:18px;cursor:pointer;box-shadow:0 6px 0 var(--a-sh);transition:transform .1s}
+.kid:hover{transform:translateY(-3px)}
+.kid:active{transform:translateY(3px);box-shadow:0 2px 0 var(--a-sh)}
+.kav{flex:none;width:84px;height:84px;border-radius:24px;background:var(--a-bg);display:grid;place-items:center;font-size:3rem;animation:bob 3s ease-in-out infinite}
+.kt{display:grid;gap:3px;min-width:0}
+.kt b{font-size:1.7rem;line-height:1.1}
+.kc{font-weight:600;color:var(--a-ink)}
+.kd{font-size:.86rem;color:var(--muted);line-height:1.35}
+.ks{font-weight:700;color:var(--c1-ink);background:var(--c1-bg);border-radius:999px;padding:2px 10px;justify-self:start;margin-top:4px}
+.home-f{text-align:center;color:var(--muted);font-size:.88rem;margin-top:22px}
+/* board game */
+.board{display:grid;gap:6px;margin-bottom:10px}
+.brow{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.brow.rev{direction:rtl}
+.cell{aspect-ratio:1;border-radius:12px;background:var(--card-2);border:2px solid var(--line);display:grid;place-items:center;font-size:1.25rem;transition:transform .2s}
+.cell.done{background:var(--a-bg);border-color:var(--a)}
+.cell.here{background:var(--a);border-color:var(--a-sh);transform:scale(1.12);box-shadow:0 3px 0 var(--a-sh);font-size:1.5rem}
 .unlock{display:inline-block;margin-top:10px;background:var(--c5-bg);color:var(--c5-ink);border-radius:999px;padding:4px 14px;font-weight:600}
 
 /* certificate */
@@ -365,11 +387,12 @@ svg.clock{width:min(230px,66vw);height:auto;display:block}
 <header class="topbar">
   <div class="in">
     <button class="brand" data-act="map" aria-label="回到關卡地圖">
-      <span class="logo" aria-hidden="true">🐧</span>
-      <span><b id="brandName">Miller's English Adventure</b><small>Unit 1–2 英語闖關・5 個關卡</small></span>
+      <span class="logo" id="brandLogo" aria-hidden="true">🏝️</span>
+      <span><b id="brandName">English Adventure</b><small id="brandSub">Miller ＆ Migo 的英語闖關</small></span>
     </button>
     <span class="spacer"></span>
-    <span class="pill" title="星星總數">⭐ <b id="starNum">0</b>/15</span>
+    <span class="pill" id="starPill" title="星星總數">⭐ <b id="starNum">0</b>/15</span>
+    <button class="tbtn" id="homeBtn" data-act="home" title="換人">👥<span class="lbl"> 換人</span></button>
     <button class="tbtn" id="speedBtn" data-act="speed" title="朗讀速度">🙂</button>
     <button class="tbtn" id="soundBtn" data-act="sound" title="音效開關">🔔</button>
   </div>
@@ -381,8 +404,8 @@ svg.clock{width:min(230px,66vw);height:auto;display:block}
 (() => {
 'use strict';
 
-/* ===== 學習者名字：要換人，只要改這一行 ===== */
-const LEARNER = 'Miller';
+/* ===== 目前的學習者（在首頁選人之後才會設定） ===== */
+let LEARNER = '', LEVELS = [], UNITS = [], PRAISE = [], TRY = [], PROFILE = null, PID = '';
 /* 線上分享版不能開列印視窗，會改成 false */
 const CAN_PRINT = true;
 
@@ -397,14 +420,27 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 const pick = a => a[Math.random() * a.length | 0];
 const pad = m => String(m).padStart(2, '0');
 const BOTTLE = '<svg class="ico" viewBox="0 0 32 48" aria-label="water bottle"><rect x="11" y="1" width="10" height="8" rx="2" fill="#0369A1"/><rect x="6" y="8" width="20" height="38" rx="7" fill="#7DD3FC" stroke="#0369A1" stroke-width="2"/><rect x="7" y="23" width="18" height="11" fill="#38BDF8"/></svg>';
-const ico = s => String(s).replace(/BOTTLE/g, BOTTLE);
+const ICONS = {
+  BOTTLE,
+  DESK: '<svg class="ico" viewBox="0 0 48 40" aria-label="desk"><rect x="2" y="4" width="44" height="6" rx="2" fill="#E3A34B"/><rect x="2" y="10" width="44" height="7" rx="1" fill="#C8842B"/><rect x="6" y="17" width="5" height="21" fill="#A0661F"/><rect x="37" y="17" width="5" height="21" fill="#A0661F"/></svg>',
+  BOARD: '<svg class="ico" viewBox="0 0 48 40" aria-label="board"><rect x="2" y="2" width="44" height="32" rx="3" fill="#8B5A2B"/><rect x="5" y="5" width="38" height="26" fill="#2E7D5B"/><path d="M10 14h12M10 20h20" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><rect x="14" y="34" width="20" height="4" rx="1" fill="#A0661F"/></svg>',
+  PCASE: '<svg class="ico" viewBox="0 0 48 40" aria-label="pencil case"><rect x="2" y="10" width="44" height="24" rx="6" fill="#3B82F6"/><rect x="2" y="10" width="44" height="9" rx="4" fill="#60A5FA"/><rect x="8" y="18" width="32" height="2.5" rx="1" fill="#1E3A8A"/><circle cx="40" cy="19" r="2.5" fill="#FCD34D"/></svg>',
+  ERASER: '<svg class="ico" viewBox="0 0 48 40" aria-label="eraser"><g transform="rotate(-18 24 20)"><rect x="6" y="12" width="36" height="16" rx="4" fill="#F472B6"/><path d="M10 12h12v16H10a4 4 0 0 1-4-4v-8a4 4 0 0 1 4-4z" fill="#60A5FA"/></g></svg>'
+};
+const ico = s => String(s).replace(/\b(BOTTLE|DESK|BOARD|PCASE|ERASER)\b/g, m => ICONS[m]);
 
 /* ===================== save ===================== */
 const STORE = 'miller-english-adventure-v1';
-let save = { best: {}, rate: 0.85, sound: true };
-try { const s = JSON.parse(localStorage.getItem(STORE)); if (s && typeof s === 'object') save = Object.assign(save, s); } catch (e) {}
+let save = { rate: 0.85, sound: true, p: {} };
+try {
+  const s = JSON.parse(localStorage.getItem(STORE));
+  if (s && typeof s === 'object') { save = Object.assign(save, s); if (s.best) { save.p.miller = { best: s.best }; delete prog.best; } }
+} catch (e) {}
+save.p = save.p || {};
+let prog = { best: {} };   /* 目前學習者的進度 */
 const persist = () => { try { localStorage.setItem(STORE, JSON.stringify(save)); } catch (e) {} };
-const totalStars = () => [1, 2, 3, 4, 5].reduce((s, n) => s + (save.best[n] || 0), 0);
+const totalStars = () => [1, 2, 3, 4, 5].reduce((s, n) => s + (prog.best[n] || 0), 0);
+const kidStars = id => Object.values((save.p[id] || {}).best || {}).reduce((s, v) => s + v, 0);
 
 /* ===================== speech (English only) ===================== */
 const TTS = {
@@ -546,6 +582,10 @@ const chip = (t, say) => `<button class="chip" data-say="${esc(say || plain(t))}
 const vEZ = (en, zh, wrong) => ({ type: 'choice', cat: '📚 單字', p: en, say: en, zh: '這是什麼意思？', o: [zh, ...wrong], full: `${en} ＝ ${zh}`, fullSay: en });
 const vZE = (zh, en, wrong) => ({ type: 'choice', cat: '📚 單字', p: `「${zh}」的英文是？`, o: [en, ...wrong], full: `${zh} ＝ ${en}`, fullSay: en });
 
+/* ======================================================
+   Miller：Unit 1 What a Day!・Unit 2 In the Classroom・Review 1
+   ====================================================== */
+function buildMiller(LEARNER) {
 const LEVELS = [
   /* ---------------- Level 1 ---------------- */
   {
@@ -762,8 +802,204 @@ const UNITS = [
   { tag: 'Unit 2', title: 'In the Classroom', zh: '教室與隨身物品', lv: [3, 4] },
   { tag: 'Review', title: 'Final Review', zh: '小企鵝閱讀＋總複習', lv: [5] }
 ];
-const PRAISE = [`Great job, ${LEARNER}!`, `Awesome, ${LEARNER}!`, 'You got it!', 'Excellent!', `Well done, ${LEARNER}!`, `Super, ${LEARNER}!`];
-const TRY = [`Nice try, ${LEARNER}!`, 'Almost there!', 'Good try!'];
+return { LEVELS, UNITS };
+}
+
+/* ======================================================
+   Migo：Inside Out 初級　Unit 1 New Class・Unit 2 My Bag・Review 1
+   ====================================================== */
+function buildMigo(LEARNER) {
+const CLASS_WORDS = [
+  { e: 'DESK', en: 'desk', zh: '書桌', ex: 'It is a desk.' },
+  { e: '🪑', en: 'chair', zh: '椅子', ex: 'It is a chair.' },
+  { e: 'BOARD', en: 'board', zh: '黑板', ex: 'It is a board.' },
+  { e: '🕰️', en: 'clock', zh: '時鐘', ex: "It's a clock." },
+  { e: '🗺️', en: 'map', zh: '地圖', ex: "It's a map." },
+  { e: '🗑️', en: 'trash can', zh: '垃圾桶', ex: 'It is a trash can.' }
+];
+const BAG_WORDS = [
+  { e: '📕', en: 'book', zh: '書', ex: 'It is a book.' },
+  { e: '✏️', en: 'pencil', zh: '鉛筆', ex: 'It is a pencil.' },
+  { e: '🖍️', en: 'crayon', zh: '蠟筆', ex: "It's a crayon." },
+  { e: '🎒', en: 'bag', zh: '書包', ex: "It's a bag." },
+  { e: 'PCASE', en: 'pencil case', zh: '鉛筆盒', ex: 'It is a pencil case.' },
+  { e: 'ERASER', en: 'eraser', zh: '橡皮擦', ex: 'It is an eraser.' }
+];
+const yn = (lead, p, yes, why) => ({ type: 'choice', cat: '✅ Yes / No', lead, p, say: p, o: yes ? ['Yes, it is.', "No, it isn't."] : ["No, it isn't.", 'Yes, it is.'], full: `${p} ${yes ? 'Yes, it is.' : "No, it isn't."}`, why });
+const what = (lead, ans, wrong, why) => ({ type: 'choice', cat: '❓ What is this?', lead, p: 'What is this?', say: 'What is this?', o: [ans, ...wrong], why });
+const LEVELS = [
+  /* ---------------- Level 1 ---------------- */
+  {
+    n: 1, unit: 'Unit 1', icon: '🏫', title: '教室探險', en: 'New Class',
+    sub: '6 個教室物品・What is this?・It is a…',
+    learn: [
+      { k: 'cards', title: '🏫 6 個教室物品', sub: '點卡片聽單字，點下方的例句聽整句，跟著大聲念！', items: CLASS_WORDS },
+      { k: 'dialog', title: '❓ What is this? 這是什麼？', sub: '問：What is this?　答：It is a ＋ 東西。', pairs: [
+        ['*What is this*?', '這是什麼？', '*It is a* desk.', '它是一張書桌。'],
+        ['What is this?', '這是什麼？', "*It's* a clock.", '它是一個時鐘。'],
+        ['What is this?', '這是什麼？', 'It is a trash can.', '它是一個垃圾桶。']] },
+      { k: 'rule', title: "✨ It is ＝ It's", html: `<p>${chip('It is a map.')} ＝ ${chip("It's a map.")}</p><p>It is 可以縮寫成 <b>It's</b>，意思一樣！</p>` }
+    ],
+    quiz: [
+      { type: 'listen', pics: 1, say: 'desk', o: [{ e: 'DESK', t: 'desk' }, { e: '🪑', t: 'chair' }, { e: '🗺️', t: 'map' }, { e: '🕰️', t: 'clock' }], why: 'desk ＝ 書桌' },
+      { type: 'listen', pics: 1, say: 'trash can', o: [{ e: '🗑️', t: 'trash can' }, { e: 'BOARD', t: 'board' }, { e: '🪑', t: 'chair' }, { e: '🗺️', t: 'map' }], why: 'trash can ＝ 垃圾桶 🗑️' },
+      vEZ('chair', '椅子', ['書桌', '黑板', '時鐘']),
+      vZE('地圖', 'map', ['clock', 'board', 'desk']),
+      vEZ('board', '黑板', ['地圖', '垃圾桶', '椅子']),
+      what('🕰️', 'It is a clock.', ['It is a map.', 'It is a desk.'], 'clock ＝ 時鐘 🕰️'),
+      what('🪑', 'It is a chair.', ['It is a board.', 'It is a trash can.'], 'chair ＝ 椅子 🪑'),
+      { type: 'choice', lead: 'DESK', p: 'What is this? ___ a desk.', o: ["It's", "I'm", 'Is', 'It'], full: "It's a desk.", why: "It is 的縮寫是 It's。" },
+      { type: 'choice', p: "It's ＝ ___", o: ['It is', 'I am', 'Is it', 'It it'], full: "It's ＝ It is", fullSay: "It's. It is.", why: "It's 是 It is 的縮寫。" },
+      { type: 'hear', talk: ['Look! What is this?', 'It is a map.', 'It is a big map.'], ask: 'What is it?', o: ['It is a map.', 'It is a desk.', 'It is a clock.', 'It is a bag.'], why: '短文說：It is a map.（它是一張地圖。）' },
+      { type: 'hear', talk: ['Good morning, class.', 'What is this?', 'It is a trash can.'], ask: 'What is it?', o: ['A trash can.', 'A chair.', 'A board.', 'A map.'], why: '短文說：It is a trash can.（它是一個垃圾桶。）' },
+      { type: 'order', w: ['It', 'is', 'a', 'board.'], zh: '它是一塊黑板。', why: 'It ＋ is ＋ a ＋ 東西。' }
+    ]
+  },
+  /* ---------------- Level 2 ---------------- */
+  {
+    n: 2, unit: 'Unit 1', icon: '👋', title: '打招呼', en: 'Nice to Meet You',
+    sub: "Hello, I'm…・I'm ＝ I am・Phonics A B C・印度的蛇老師",
+    learn: [
+      { k: 'dialog', title: '👋 打招呼', sub: "早上見面說 Good morning，介紹自己說 I'm ＋ 名字。", pairs: [
+        ['Good morning.', '早安。', 'Good morning.', '早安。'],
+        [`Hello. *I'm* ${LEARNER}.`, `哈囉，我是 ${LEARNER}。`, "Hi. *I'm* Olivia.", '嗨，我是 Olivia。'],
+        ['Nice to meet you.', '很高興認識你。', 'Nice to meet you, too.', '我也很高興認識你。']] },
+      { k: 'rule', title: "✨ I am ＝ I'm", html: `<p>${chip(`I am ${LEARNER}.`)} ＝ ${chip(`I'm ${LEARNER}.`)}</p><p>I am 可以縮寫成 <b>I'm</b>。</p>` },
+      { k: 'phonics', title: '🔤 Phonics：A B C', sub: '點卡片，聽字母的聲音和代表字。', groups: [
+        { tag: 'Aa', words: [['[a]nt', '螞蟻', '🐜', 'A. a. ant.']] },
+        { tag: 'Bb', words: [['[b]ike', '腳踏車', '🚲', 'B. b. bike.']] },
+        { tag: 'Cc', words: [['[c]at', '貓', '🐱', 'C. c. cat.']] }] },
+      { k: 'lines', title: '🐍 閱讀：The Snake Teacher', sub: '點句子聽朗讀，也可以按「全部朗讀」。', story: 1, items: [
+        ['This is India.', '這裡是印度。'],
+        ['This is a *teacher*.', '這是一位老師。'],
+        ['What is this? It is a *snake*!', '這是什麼？是一條蛇！'],
+        ['Look! The snake can *dance*.', '看！蛇會跳舞。']] },
+      { k: 'cards', title: '🔑 閱讀關鍵字', items: [
+        { e: '🐍', en: 'snake', zh: '蛇' }, { e: '🧑‍🏫', en: 'teacher', zh: '老師' },
+        { e: '🇮🇳', en: 'India', zh: '印度' }, { e: '💃', en: 'dance', zh: '跳舞' }] }
+    ],
+    quiz: [
+      { type: 'hear', talk: ['Good morning.', "Hello. I'm Victor.", 'Nice to meet you.'], ask: "What is the boy's name?", o: ['Victor', 'Liam', 'Tim', 'Paul'], why: "他說：Hello. I'm Victor.（哈囉，我是 Victor。）" },
+      { type: 'choice', lead: '👋', p: `Hello. ___ ${LEARNER}.`, o: ["I'm", "It's", 'I', 'Am'], full: `Hello. I'm ${LEARNER}.`, why: "介紹自己用 I'm（I am）＋ 名字。" },
+      { type: 'choice', p: "I'm ＝ ___", o: ['I am', 'It is', 'I is', 'Am I'], full: "I'm ＝ I am", fullSay: "I'm. I am.", why: "I'm 是 I am 的縮寫。" },
+      { type: 'order', w: ['Nice', 'to', 'meet', 'you.'], zh: '很高興認識你。', why: 'Nice to meet you. 是打招呼時說的話。' },
+      { type: 'order', w: ['Hello.', "I'm", `${LEARNER}.`], zh: `哈囉，我是 ${LEARNER}。`, why: "先說 Hello，再說 I'm ＋ 名字。" },
+      { type: 'listen', say: 'cat', o: ['cat', 'bike', 'ant', 'map'], why: 'c-a-t：開頭是 C c 的聲音 /k/。' },
+      { type: 'choice', cat: '🔤 Phonics', lead: '🚲', p: 'b, b, ___', say: 'b, b, bike', o: ['bike', 'cat', 'ant'], full: 'b, b, bike', why: 'bike 的開頭是字母 B b，發 /b/ 的聲音。' },
+      { type: 'sort', p: '這些字是哪個字母開頭？', hint: '聽第一個聲音：/æ/ 是 A、/b/ 是 B、/k/ 是 C。', bins: [{ k: 'a', t: 'Aa' }, { k: 'b', t: 'Bb' }, { k: 'c', t: 'Cc' }], items: [{ t: '[a]nt', e: '🐜', b: 'a' }, { t: '[b]ike', e: '🚲', b: 'b' }, { t: '[c]at', e: '🐱', b: 'c' }] },
+      vEZ('teacher', '老師', ['蛇', '貓', '地圖']),
+      vZE('跳舞', 'dance', ['snake', 'teacher', 'India']),
+      { type: 'hear', talk: ['This is a teacher.', 'He is in India.', 'Look! The snake can dance!'], ask: 'Where is the teacher?', o: ['In India.', 'In Italy.', 'In Indonesia.', 'In a bag.'], why: '短文說：He is in India.（他在印度。）' },
+      { type: 'choice', cat: '📖 閱讀', lead: '🐍', p: 'What animal is this?', say: 'What animal is this?', o: ['A snake.', 'A cat.', 'A dog.', 'A fox.'], why: '故事裡會跳舞的動物是 snake（蛇），不是 cat。' }
+    ]
+  },
+  /* ---------------- Level 3 ---------------- */
+  {
+    n: 3, unit: 'Unit 2', icon: '🎒', title: '我的書包', en: 'My Bag',
+    sub: '6 個文具・Is this a…?・a / an',
+    learn: [
+      { k: 'cards', title: '🎒 6 個文具', sub: '點卡片聽單字，點下方的例句聽整句。注意：eraser 前面是 an！', items: BAG_WORDS },
+      { k: 'rule', title: '✨ a 還是 an？', html: `<p>大部分的字前面用 <b>a</b>：${chip('a book')}${chip('a pencil')}${chip('a bag')}</p><p>開頭是母音（a、e、i、o、u）的字用 <b>an</b>：${chip('an eraser')}${chip('an ant')}</p>` },
+      { k: 'dialog', title: '❓ Is this a…? 這是…嗎？', sub: "是 → Yes, it is.　不是 → No, it isn't.", pairs: [
+        ['Is this a book?', '這是一本書嗎？', '*Yes, it is.*', '是的。'],
+        ['Is this a crayon?', '這是一支蠟筆嗎？', "*No, it isn't.* It's a pencil.", '不是，它是一支鉛筆。'],
+        ['Is this an eraser?', '這是一個橡皮擦嗎？', 'Yes, it is.', '是的。']] },
+      { k: 'rule', title: "✨ isn't ＝ is not", html: `<p>${chip("No, it isn't.")} ＝ ${chip('No, it is not.')}</p><p>isn't 是 is not 的縮寫。</p>` }
+    ],
+    quiz: [
+      { type: 'listen', pics: 1, say: 'eraser', o: [{ e: 'ERASER', t: 'eraser' }, { e: '✏️', t: 'pencil' }, { e: '🖍️', t: 'crayon' }, { e: '📕', t: 'book' }], why: 'eraser ＝ 橡皮擦' },
+      { type: 'listen', pics: 1, say: 'pencil case', o: [{ e: 'PCASE', t: 'pencil case' }, { e: '🎒', t: 'bag' }, { e: '✏️', t: 'pencil' }, { e: '📕', t: 'book' }], why: 'pencil case ＝ 鉛筆盒' },
+      vEZ('crayon', '蠟筆', ['鉛筆', '書', '書包']),
+      vZE('書包', 'bag', ['book', 'pencil case', 'eraser']),
+      vEZ('pencil case', '鉛筆盒', ['橡皮擦', '蠟筆', '鉛筆']),
+      yn('📕', 'Is this a book?', true, '圖片是 book（書），所以回答 Yes, it is.'),
+      yn('🕰️', 'Is this a chair?', false, "圖片是 clock（時鐘），不是 chair，所以回答 No, it isn't."),
+      yn('ERASER', 'Is this a crayon?', false, "圖片是 eraser（橡皮擦），不是 crayon，所以回答 No, it isn't."),
+      { type: 'choice', lead: 'ERASER', p: 'This is ___ eraser.', o: ['an', 'a', 'the', 'is'], full: 'This is an eraser.', why: 'eraser 的開頭是母音 e，所以用 an。' },
+      { type: 'choice', lead: '🖍️', p: 'This is ___ crayon.', o: ['a', 'an', 'am', 'it'], full: 'This is a crayon.', why: 'crayon 的開頭是 c（子音），所以用 a。' },
+      { type: 'sort', p: 'a 還是 an？把單字放進對的籃子！', hint: '開頭是 a、e、i、o、u 的字才用 an。', bins: [{ k: 'a', t: 'a', sub: '子音開頭' }, { k: 'an', t: 'an', sub: '母音開頭' }], items: [{ t: 'book', e: '📕', b: 'a' }, { t: 'eraser', e: 'ERASER', b: 'an' }, { t: 'pencil', e: '✏️', b: 'a' }, { t: 'ant', e: '🐜', b: 'an' }, { t: 'bag', e: '🎒', b: 'a' }] },
+      { type: 'choice', p: "No, it isn't. ＝ No, it ___.", o: ['is not', 'not is', 'am not', 'are not'], full: "No, it isn't. ＝ No, it is not.", fullSay: "No, it isn't. No, it is not.", why: "isn't ＝ is not。" },
+      { type: 'order', w: ['Is', 'this', 'an', 'eraser?'], zh: '這是一個橡皮擦嗎？', why: '問句：Is ＋ this ＋ an ＋ eraser?' },
+      { type: 'hear', talk: ['Look at this.', 'Is this a crayon?', "No, it isn't.", "It's a pencil."], ask: 'What is it?', o: ["It's a pencil.", "It's a crayon.", "It's a book.", "It's a bag."], why: "短文最後說：It's a pencil.（它是一支鉛筆。）" }
+    ]
+  },
+  /* ---------------- Level 4 ---------------- */
+  {
+    n: 4, unit: 'Unit 2', icon: '🙋', title: '你叫什麼名字', en: 'What Is Your Name?',
+    sub: 'My name is…・my / your・Phonics D E F・印尼的頭頂搬運',
+    learn: [
+      { k: 'dialog', title: '🙋 問名字', sub: '問：What is your name?　答：My name is ＋ 名字。', pairs: [
+        ['What is *your* name?', '你叫什麼名字？', `*My* name is ${LEARNER}.`, `我的名字是 ${LEARNER}。`],
+        ['What is your name?', '你叫什麼名字？', 'My name is Emma.', '我的名字是 Emma。'],
+        ['Nice to meet you, Emma.', '很高興認識你，Emma。', 'Nice to meet you, too.', '我也很高興認識你。']] },
+      { k: 'rule', title: '💡 小心三個陷阱', html: `<ol><li>問別人用 <b>your</b>：What is <b>your</b> name?（✗ my）</li><li>回答自己用 <b>My</b>：<b>My</b> name is ${LEARNER}.（✗ Your）</li><li>name 後面接 <b>is</b>：My name <b>is</b>…（✗ am）</li></ol>` },
+      { k: 'phonics', title: '🔤 Phonics：D E F', sub: '點卡片，聽字母的聲音和代表字。', groups: [
+        { tag: 'Dd', words: [['[d]og', '狗', '🐶', 'D. d. dog.']] },
+        { tag: 'Ee', words: [['[e]gg', '蛋', '🥚', 'E. e. egg.']] },
+        { tag: 'Ff', words: [['[f]ox', '狐狸', '🦊', 'F. f. fox.']] }] },
+      { k: 'lines', title: '🧺 閱讀：On My Head', sub: '點句子聽朗讀，也可以按「全部朗讀」。', story: 1, items: [
+        ['This is *Indonesia*.', '這裡是印尼。'],
+        ['Look! Where is the *bag*?', '看！袋子在哪裡？'],
+        ['It is on her *head*!', '它在她的頭上！'],
+        ['She can *carry* a bag on her head.', '她可以把袋子頂在頭上搬運。']] },
+      { k: 'cards', title: '🔑 閱讀關鍵字', items: [
+        { e: '🧺', en: 'carry', zh: '搬運' }, { e: '🙆', en: 'head', zh: '頭' },
+        { e: '🇮🇩', en: 'Indonesia', zh: '印尼' }, { e: '🎒', en: 'bag', zh: '袋子、書包' }] }
+    ],
+    quiz: [
+      { type: 'choice', p: 'What is ___ name?', o: ['your', 'my', 'I', 'you'], full: 'What is your name?', why: '問別人的名字用 your（你的）。' },
+      { type: 'choice', p: `___ name is ${LEARNER}.`, o: ['My', 'Your', 'I', 'Me'], full: `My name is ${LEARNER}.`, why: '說自己的名字用 My（我的）。' },
+      { type: 'choice', p: `My name ___ ${LEARNER}.`, o: ['is', 'am', 'are', 'it'], full: `My name is ${LEARNER}.`, why: 'name 後面接 is，不是 am。' },
+      { type: 'order', w: ['My', 'name', 'is', `${LEARNER}.`], zh: `我的名字是 ${LEARNER}。`, why: 'My ＋ name ＋ is ＋ 名字。' },
+      { type: 'order', w: ['What', 'is', 'your', 'name?'], zh: '你叫什麼名字？', why: 'What ＋ is ＋ your ＋ name?' },
+      { type: 'hear', talk: ['Hi! What is your name?', 'My name is Lilly.', 'Nice to meet you, Lilly.'], ask: "What is the girl's name?", o: ['Lilly', 'Emma', 'Tina', 'Amy'], why: '她說：My name is Lilly.' },
+      { type: 'listen', say: 'egg', o: ['egg', 'dog', 'fox', 'eraser'], why: 'e-g-g：開頭是 E e 的聲音 /ɛ/。' },
+      { type: 'choice', cat: '🔤 Phonics', lead: '🦊', p: 'f, f, ___', say: 'f, f, fox', o: ['fox', 'dog', 'egg'], full: 'f, f, fox', why: 'fox 的開頭是字母 F f，發 /f/ 的聲音。' },
+      { type: 'sort', p: '這些字是哪個字母開頭？', hint: '聽第一個聲音：/d/ 是 D、/ɛ/ 是 E、/f/ 是 F。', bins: [{ k: 'd', t: 'Dd' }, { k: 'e', t: 'Ee' }, { k: 'f', t: 'Ff' }], items: [{ t: '[d]og', e: '🐶', b: 'd' }, { t: '[e]gg', e: '🥚', b: 'e' }, { t: '[f]ox', e: '🦊', b: 'f' }] },
+      vEZ('dog', '狗', ['狐狸', '蛋', '貓']),
+      vZE('頭', 'head', ['bag', 'carry', 'dog']),
+      { type: 'hear', talk: ['This is Indonesia.', 'Look! Where is the bag?', 'It is on her head!'], ask: 'Where is the bag?', o: ['On her head.', 'In her hand.', 'On the desk.', 'In the trash can.'], why: '短文說：It is on her head!（它在她的頭上！）' },
+      { type: 'choice', cat: '📖 閱讀', lead: '🇮🇩', p: 'Where is this?', say: 'Where is this?', o: ['Indonesia', 'India', 'Italy', 'Australia'], why: '把東西頂在頭上搬運的故事在 Indonesia（印尼）；蛇老師的故事才是 India（印度）。' }
+    ]
+  },
+  /* ---------------- Level 5 ---------------- */
+  {
+    n: 5, unit: 'Review', icon: '🎲', title: '桌遊大挑戰', en: 'Review Board Game', board: 1, shuffle: 1,
+    sub: '12 格桌遊：What is this?・What is your name?・Is this a…?',
+    learn: [
+      { k: 'rule', title: '🎲 玩法', html: `<p>桌遊有 12 格，每答一題，${LEARNER} 就往前走一格，走到終點就完成！</p><p>三種題目輪流出現：</p><ol><li>❓ <b>What is this?</b> → 看圖回答 It is a ___.</li><li>🙋 <b>What is your name?</b> → My name is ${LEARNER}.</li><li>✅ <b>Is this a / an ___?</b> → 看圖：是就 Yes, it is.，不是就 No, it isn't.</li></ol><p class="note">⚠️ 小心！有些格子的圖和問題故意不一樣，這時要回答 No, it isn't.</p>` },
+      { k: 'cards', title: '📚 12 個單字總複習', sub: '點卡片聽單字。', items: [...CLASS_WORDS, ...BAG_WORDS].map(w => ({ e: w.e, en: w.en, zh: w.zh })) },
+      { k: 'rule', title: '📋 句型總複習', html: `<p>${chip(`Hello. I'm ${LEARNER}.`)}${chip('Nice to meet you.')}</p><p>${chip('What is this?')}${chip('It is a clock.')}</p><p>${chip('Is this a book?')}${chip('Yes, it is.')}${chip("No, it isn't.")}</p><p>${chip('What is your name?')}${chip(`My name is ${LEARNER}.`)}</p>` }
+    ],
+    quiz: [
+      what('DESK', 'It is a desk.', ['It is a chair.', 'It is a bag.'], 'desk ＝ 書桌'),
+      yn('📕', 'Is this a book?', true, '圖片是 book，所以 Yes, it is.'),
+      { type: 'choice', cat: '🙋 名字', p: 'What is your name?', say: 'What is your name?', o: [`My name is ${LEARNER}.`, `Your name is ${LEARNER}.`, `My name am ${LEARNER}.`], why: '回答用 My name is ＋ 名字。' },
+      yn('🕰️', 'Is this a chair?', false, "圖片是 clock，不是 chair，所以 No, it isn't."),
+      what('🖍️', 'It is a crayon.', ['It is a pencil.', 'It is an eraser.'], 'crayon ＝ 蠟筆'),
+      yn('PCASE', 'Is this a pencil case?', true, '圖片是 pencil case，所以 Yes, it is.'),
+      { type: 'choice', cat: '🙋 名字', p: '___ is your name?', o: ['What', 'Who', 'It', 'Is'], full: 'What is your name?', why: '問名字：What is your name?' },
+      what('ERASER', 'It is an eraser.', ['It is a eraser.', 'It is a pencil.'], 'eraser 開頭是母音，要用 an。'),
+      yn('🗺️', 'Is this a board?', false, "圖片是 map，不是 board，所以 No, it isn't."),
+      { type: 'order', cat: '🙋 名字', w: ['My', 'name', 'is', `${LEARNER}.`], zh: `我的名字是 ${LEARNER}。`, why: 'My ＋ name ＋ is ＋ 名字。' },
+      what('🗑️', 'It is a trash can.', ['It is a bag.', 'It is a desk.'], 'trash can ＝ 垃圾桶'),
+      yn('🎒', 'Is this a bag?', true, '圖片是 bag，所以 Yes, it is.')
+    ]
+  }
+];
+const UNITS = [
+  { tag: 'Unit 1', title: 'New Class', zh: '教室物品與打招呼', lv: [1, 2] },
+  { tag: 'Unit 2', title: 'My Bag', zh: '文具與問名字', lv: [3, 4] },
+  { tag: 'Review', title: 'Review 1', zh: '桌遊總複習', lv: [5] }
+];
+return { LEVELS, UNITS };
+}
+
+/* ===================== 學習者設定 ===================== */
+const PROFILES = {
+  miller: { name: 'Miller', mascot: '🐧', mascotZh: '小企鵝 Penny', intro: "Hi, Miller! I'm Penny, the little penguin. Let's go on an English adventure!", sub: 'Unit 1–2 英語闖關・5 個關卡', course: 'What a Day!・In the Classroom', desc: '時間與作息・教室隨身物品・所有格・Long a / e', build: buildMiller, source: 'Unit 1 What a Day!・Unit 2 In the Classroom・CLIL Reading 1・Review 1', cert: '完成了 Unit 1「What a Day!」、Unit 2「In the Classroom」<br>與總複習的全部 5 個關卡！', lv: 3 },
+  migo: { name: 'Migo', mascot: '🐶', mascotZh: '小狗 Lucky', intro: "Hi, Migo! I'm Lucky, the little dog. Let's go on an English adventure!", sub: 'Inside Out 初級・5 個關卡', course: 'New Class・My Bag', desc: '教室物品・文具・打招呼・問名字・Phonics A–F', build: buildMigo, source: 'Inside Out 初級：Unit 1 New Class・Unit 2 My Bag・Review 1', cert: '完成了 Unit 1「New Class」、Unit 2「My Bag」<br>與 Review 1 的全部 5 個關卡！', lv: 1 }
+};
 const ZH_OK = ['答對了！', '太棒了！', '好厲害！', '完全正確！'];
 
 /* ===================== state ===================== */
@@ -773,6 +1009,7 @@ const starsHTML = n => `<span class="stars" aria-label="${n} 顆星">${[1, 2, 3]
 const RATES = [[0.65, '🐢', '慢速'], [0.85, '🙂', '標準'], [1, '🐇', '快速']];
 function updateTop() {
   $('#starNum').textContent = totalStars();
+  $('#starPill').hidden = !PROFILE; $('#homeBtn').hidden = !PROFILE;
   const r = RATES.find(x => x[0] === save.rate) || RATES[1];
   $('#speedBtn').innerHTML = `${r[1]}<span class="lbl"> ${r[2]}</span>`;
   $('#soundBtn').textContent = save.sound ? '🔔' : '🔕';
@@ -794,13 +1031,13 @@ function armed(el, msg) {
 /* ===================== map ===================== */
 function renderMap() {
   run = null;
-  const total = totalStars(), allDone = LEVELS.every(L => save.best[L.n]);
-  const todo = LEVELS.filter(L => !save.best[L.n]).map(L => L.n);
+  const total = totalStars(), allDone = LEVELS.every(L => prog.best[L.n]);
+  const todo = LEVELS.filter(L => !prog.best[L.n]).map(L => L.n);
   const msg = allDone ? `${LEARNER} 全部過關了，好厲害！🎉 快去領取你的證書吧！`
-    : total === 0 ? `Hi, ${LEARNER}! 👋 我是小企鵝 Penny。5 個關卡可以自由選，想先挑戰哪一關都可以，收集 15 顆星星吧！`
+    : total === 0 ? `Hi, ${LEARNER}! 👋 我是${PROFILE.mascotZh}。5 個關卡可以自由選，想先挑戰哪一關都可以，收集 15 顆星星吧！`
     : `繼續加油，${LEARNER}！還沒挑戰的關卡：第 ${todo.join('、')} 關。`;
   const lvCard = L => {
-    const st = save.best[L.n] || 0;
+    const st = prog.best[L.n] || 0;
     return `<button class="lv" data-lv="${L.n}" data-act="open" data-n="${L.n}">
       <span class="num"><b>${L.n}</b>${L.icon}</span>
       <span class="lv-t"><span class="t">${esc(L.title)}</span><span class="e">${esc(L.en)}</span><span class="s">${esc(L.sub)}</span>${starsHTML(st)}<span class="go">${st ? '再挑戰 ↻' : '開始 ▶'}</span></span>
@@ -808,8 +1045,8 @@ function renderMap() {
   };
   show(`
     <div class="hero">
-      <div class="penny" aria-hidden="true">🐧</div>
-      <div class="bubble"><p>${msg}</p><button class="say-btn" data-say="Hi, ${LEARNER}! I'm Penny, the little penguin. Let's go on an English adventure!">🔊 聽 Penny 說話</button></div>
+      <div class="penny" aria-hidden="true">${PROFILE.mascot}</div>
+      <div class="bubble"><p>${msg}</p><button class="say-btn" data-say="${esc(PROFILE.intro)}">🔊 聽${PROFILE.mascotZh.slice(0, 2)}說話</button></div>
     </div>
     ${UNITS.map(u => `<section class="unit" data-lv="${u.lv[0] === 5 ? 5 : u.lv[0]}">
       <div class="unit-h"><span class="tag">${u.tag}</span><h3>${u.title}</h3><span class="uzh">${u.zh}</span></div>
@@ -817,7 +1054,7 @@ function renderMap() {
     </section>`).join('')}
     ${allDone ? `<div class="row-c" data-lv="1"><button class="btn big" data-act="cert">🎓 領取 ${LEARNER} 的證書</button></div>` : ''}
     <footer class="foot">
-      <div>📖 內容依據：Unit 1 What a Day!・Unit 2 In the Classroom・CLIL Reading 1・Review 1</div>
+      <div>📖 內容依據：${PROFILE.source}</div>
       <div>🔊 朗讀使用瀏覽器內建英文語音（建議使用 Chrome 或 Edge）${TTS.ok ? '' : '　⚠️ 這個瀏覽器不支援朗讀'}</div>
       <div class="links">
         <button class="link" data-act="reset">🗑️ 清除闖關紀錄</button>
@@ -863,7 +1100,7 @@ function blockHTML(b, bi) {
     case 'verbs': return sec(b, `<div class="rule"><table class="tbl"><thead><tr><th>I / You / We / They</th><th>${LEARNER} / He / She</th><th>規則</th></tr></thead><tbody>
         ${VERBS.map(v => `<tr><td>${chip(v[0])}</td><td>${chip(v[1])}</td><td>${v[2]}</td></tr>`).join('')}</tbody></table>
         <p class="note">⚠️ 問句用 <b>does</b> 時，後面的動詞要變回原形：What time does ${LEARNER} <b>get</b> dressed?（✗ gets）</p></div>`);
-    case 'phonics': return sec(b, `<div class="ph">${b.groups.map(g => `<div class="ph-group"><span class="ph-tag">${g.tag}</span><div class="ph-words">${g.words.map(w => `<button class="ph-w" data-say="${plain(w[0])}"><span class="pe">${w[2]}</span><span class="pw hl">${hl(w[0])}</span><span class="pz">${w[1]}</span></button>`).join('')}</div></div>`).join('')}</div>`);
+    case 'phonics': return sec(b, `<div class="ph">${b.groups.map(g => `<div class="ph-group"><span class="ph-tag">${g.tag}</span><div class="ph-words">${g.words.map(w => `<button class="ph-w" data-say="${esc(w[3] || plain(w[0]))}"><span class="pe">${w[2]}</span><span class="pw hl">${hl(w[0])}</span><span class="pz">${w[1]}</span></button>`).join('')}</div></div>`).join('')}</div>`);
     case 'countries': return sec(b, `<div class="row"><button class="say-btn" data-act="zh">中文 顯示／隱藏</button></div><div class="ctry">${b.items.map(c => `<div class="ctry-c"><div class="ctry-h"><span>${c.e}</span>${c.name}</div>${c.lines.map(l => sentBtn(l)).join('')}</div>`).join('')}</div>`);
     case 'scene4': return sec(b, `<div class="s4">${S4.map(s => `<button class="s4c" data-say="${s.ex}">${sceneHTML(s.sc)}<div class="s4t"><b>${s.w}</b> ${s.zh}<small>${s.d}</small></div><div class="s4e">🔊 ${s.ex}</div></button>`).join('')}</div>
         <p class="sub" style="margin:10px 0 0">this / that 後面接 is；these / those 後面接 are。</p>`);
@@ -874,7 +1111,7 @@ function blockHTML(b, bi) {
 function renderLearn(L) {
   cur = L.n; run = null;
   show(`${levelHead(L, 'learn')}
-    <div class="tip"><span>🐧</span><div>${LEARNER}，先點卡片聽一聽、跟著念一念，學會了再按最下面的「開始挑戰」！</div></div>
+    <div class="tip"><span>${PROFILE.mascot}</span><div>${LEARNER}，先點卡片聽一聽、跟著念一念，學會了再按最下面的「開始挑戰」！</div></div>
     ${L.learn.map(blockHTML).join('')}
     <div class="cta"><button class="btn big" data-act="quiz">我準備好了！開始挑戰 ▶</button></div>`, L.n);
 }
@@ -911,7 +1148,8 @@ const blank = s => esc(s).replace(/___/g, '<span class="blank">　?　</span>');
 
 function startQuiz(n) {
   const L = LEVELS[n - 1]; cur = n;
-  const qs = L.quiz.map(q => Object.assign({}, q, { tries: 0 }));
+  let qs = L.quiz.map(q => Object.assign({}, q, { tries: 0 }));
+  if (L.shuffle) qs = shuffle(qs);
   run = { L, n, queue: qs, pos: 0, total: qs.reduce((s, q) => s + ptsOf(q), 0), done: 0, good: 0, missed: [], missedSort: [], retry: [], retryMode: false, locked: false };
   advance();
 }
@@ -925,7 +1163,16 @@ function advance() {
   }
   finish();
 }
+function boardHTML() {
+  const qs = run.queue, rows = [];
+  for (let i = 0; i < qs.length; i += 6) rows.push(qs.slice(i, i + 6).map((q, j) => i + j));
+  const cell = i => { const q = qs[i], here = i === run.pos, done = i < run.pos;
+    const icon = done ? (q.first ? '⭐' : '💪') : here ? PROFILE.mascot : (q.cat || '').slice(0, 2).trim() || '❓';
+    return `<span class="cell${here ? ' here' : done ? ' done' : ''}">${icon}</span>`; };
+  return `<div class="board">${rows.map((r, k) => `<div class="brow${k % 2 ? ' rev' : ''}">${r.map(cell).join('')}</div>`).join('')}</div>`;
+}
 function barHTML() {
+  if (run.L.board && !run.retryMode) return boardHTML() + `<div class="qbar"><div class="track"><div class="fill" id="fill" style="width:${run.done / run.total * 100}%"></div></div><span class="qcount" id="qcount">${run.done} / ${run.total}</span></div>`;
   if (run.retryMode) return `<div class="qbar"><span class="qcount">🔁 錯題再練 ${run.pos + 1} / ${run.queue.length}</span><div class="track"><div class="fill" style="width:${run.pos / run.queue.length * 100}%"></div></div></div>`;
   return `<div class="qbar"><div class="track"><div class="fill" id="fill" style="width:${run.done / run.total * 100}%"></div></div><span class="qcount" id="qcount">${run.done} / ${run.total}</span></div>`;
 }
@@ -988,7 +1235,7 @@ function renderQ() {
 function lockCard() { $$('#qcard button').forEach(b => { if (!b.dataset.say) b.disabled = true; }); }
 function resolve(ok) {
   const q = run.q;
-  if (!run.retryMode) { run.done++; if (ok) run.good++; else { run.missed.push(q); run.retry.push(q); } }
+  if (!run.retryMode) { run.done++; q.first = ok; if (ok) run.good++; else { run.missed.push(q); run.retry.push(q); } }
   else if (!ok && ++q.tries < 2) run.retry.push(q);
   updateBar(); feedback(ok, q);
 }
@@ -1078,14 +1325,14 @@ function showRetryIntro() {
 function finish() {
   const pct = run.total ? run.good / run.total : 1;
   const stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : 1;
-  const prev = save.best[run.n] || 0;
-  save.best[run.n] = Math.max(prev, stars); persist();
+  const prev = prog.best[run.n] || 0;
+  prog.best[run.n] = Math.max(prev, stars); persist();
   const L = run.L, n = run.n;
   const msg = stars === 3 ? `滿分表現！${LEARNER} 太厲害了！` : stars === 2 ? '很棒！再挑戰一次就有機會拿到 3 顆星！' : '完成關卡了！看看下面的錯題，再挑戰一次會更好！';
   const qLabel = q => q.type === 'hear' ? `🎧 聽力閱讀：${q.ask}` : q.type === 'listen' ? `🎧 聽力：${q.say}` : q.type === 'order' ? `🧩 排句子：${q.zh}` : q.type === 'clock' ? '⏰ 撥時鐘' : `${q.clock ? '⏰ 看時鐘：' : '❓ '}${q.p.replace(/___/g, '＿＿')}`;
   const items = run.missed.map(q => `<li><span class="mq">${esc(qLabel(q))}</span><span class="ma">✔ ${esc(fullOf(q))}</span><button class="say-btn" data-say="${esc(sayOf(q))}" aria-label="聽">🔊</button></li>`)
     .concat(run.missedSort.map(s => `<li><span class="mq">🗂️ 分類：${esc(s.w)}</span><span class="ma">✔ ${esc(s.bin)}</span><button class="say-btn" data-say="${esc(s.w)}" aria-label="聽">🔊</button></li>`));
-  const allDone = LEVELS.every(x => save.best[x.n]);
+  const allDone = LEVELS.every(x => prog.best[x.n]);
   const nextBtn = (allDone ? '<button class="btn" data-act="cert">🎓 領取證書</button>' : '') + (n < 5 ? `<button class="btn" data-act="open" data-n="${n + 1}">下一關 ▶</button>` : '');
   show(`${levelHead(L, 'result')}<section class="card center">
       <div class="big-stars">${[1, 2, 3].map(i => `<span class="${i <= stars ? 'on' : ''}">★</span>`).join('')}</div>
@@ -1104,7 +1351,7 @@ function finish() {
 
 /* ===================== certificate ===================== */
 function renderCert() {
-  if (!LEVELS.every(L => save.best[L.n])) { toast('完成全部 5 關就能領證書喔！'); return; }
+  if (!LEVELS.every(L => prog.best[L.n])) { toast('完成全部 5 關就能領證書喔！'); return; }
   const d = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
   show(`<div class="cert">
       <div class="big-e">🏆</div>
@@ -1112,10 +1359,10 @@ function renderCert() {
       <h2>英語冒險小達人</h2>
       <p>This certifies that</p>
       <div class="name">${LEARNER}</div>
-      <p>完成了 Unit 1「What a Day!」、Unit 2「In the Classroom」<br>與總複習的全部 5 個關卡！</p>
-      <div class="lvls">${LEVELS.map(L => `<span>${L.icon} 第 ${L.n} 關 ${'★'.repeat(save.best[L.n] || 0)}</span>`).join('')}</div>
+      <p>${PROFILE.cert}</p>
+      <div class="lvls">${LEVELS.map(L => `<span>${L.icon} 第 ${L.n} 關 ${'★'.repeat(prog.best[L.n] || 0)}</span>`).join('')}</div>
       <div class="total">⭐ ${totalStars()} / 15</div>
-      <div class="d">${d}　・　小企鵝 Penny 🐧 頒發</div>
+      <div class="d">${d}　・　${PROFILE.mascotZh} ${PROFILE.mascot} 頒發</div>
     </div>
     <div class="row-c no-print" data-lv="1"><button class="btn ghost" data-act="map">🗺️ 回到地圖</button>${CAN_PRINT ? '<button class="btn" data-act="print">🖨️ 列印證書</button>' : ''}</div>
     ${CAN_PRINT ? '' : '<p class="center no-print" style="color:var(--muted);margin-top:10px">📸 想保存證書，可以直接截圖喔！</p>'}`);
@@ -1125,7 +1372,9 @@ function renderCert() {
 
 /* ===================== events ===================== */
 const ACTS = {
-  map: () => renderMap(),
+  map: () => PROFILE ? renderMap() : renderHome(),
+  home: () => { SFX.pop(); renderHome(); },
+  kid: el => { SFX.pop(); selectProfile(el.dataset.id); },
   open: el => { SFX.pop(); renderLearn(LEVELS[+el.dataset.n - 1]); },
   learn: () => { SFX.pop(); renderLearn(LEVELS[cur - 1]); },
   quiz: () => { SFX.pop(); startQuiz(cur); },
@@ -1149,7 +1398,7 @@ const ACTS = {
   zh: () => app.classList.toggle('hide-zh'),
   speed: () => { const i = RATES.findIndex(x => x[0] === save.rate); save.rate = RATES[(i + 1) % RATES.length][0]; persist(); updateTop(); TTS.say(`Hello, ${LEARNER}!`); },
   sound: () => { save.sound = !save.sound; persist(); updateTop(); SFX.pop(); },
-  reset: el => { if (!armed(el, `再按一次，就會清除 ${LEARNER} 的所有星星紀錄`)) return; save.best = {}; persist(); renderMap(); toast('已清除闖關紀錄'); },
+  reset: el => { if (!armed(el, `再按一次，就會清除 ${LEARNER} 的所有星星紀錄`)) return; prog.best = {}; persist(); renderMap(); toast('已清除闖關紀錄'); },
   cert: () => renderCert(),
   print: () => window.print()
 };
@@ -1165,9 +1414,39 @@ document.addEventListener('click', e => {
   if (fn) fn(el, e);
 });
 
-$('#brandName').textContent = `${LEARNER}'s English Adventure`;
-document.title = `${LEARNER}'s English Adventure`;
-renderMap();
+/* ===================== 首頁：選學習者 ===================== */
+function selectProfile(id) {
+  const P = PROFILES[id]; if (!P) return renderHome();
+  PROFILE = P; PID = id; LEARNER = P.name;
+  save.p[id] = save.p[id] || { best: {} }; prog = save.p[id];
+  ({ LEVELS, UNITS } = P.build(LEARNER));
+  PRAISE = [`Great job, ${LEARNER}!`, `Awesome, ${LEARNER}!`, 'You got it!', 'Excellent!', `Well done, ${LEARNER}!`, `Super, ${LEARNER}!`];
+  TRY = [`Nice try, ${LEARNER}!`, 'Almost there!', 'Good try!'];
+  $('#brandName').textContent = `${LEARNER}'s English Adventure`;
+  $('#brandSub').textContent = P.sub; $('#brandLogo').textContent = P.mascot;
+  document.title = `${LEARNER}'s English Adventure`;
+  if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+  renderMap();
+}
+function renderHome() {
+  PROFILE = null; PID = ''; LEARNER = ''; LEVELS = []; UNITS = []; prog = { best: {} }; run = null;
+  $('#brandName').textContent = 'English Adventure'; $('#brandSub').textContent = 'Miller ＆ Migo 的英語闖關'; $('#brandLogo').textContent = '🏝️';
+  document.title = 'English Adventure';
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  show(`<div class="home">
+      <div class="home-h"><span class="big-e">🏝️</span><h2>English Adventure</h2><p>今天換誰來闖關？點一下自己的名字！</p></div>
+      <div class="kids">${Object.entries(PROFILES).map(([id, P]) => `
+        <button class="kid" data-lv="${P.lv}" data-act="kid" data-id="${id}">
+          <span class="kav">${P.mascot}</span>
+          <span class="kt"><b>${P.name}</b><span class="kc">${P.course}</span><span class="kd">${P.desc}</span>
+          <span class="ks">⭐ ${kidStars(id)} / 15</span></span>
+        </button>`).join('')}</div>
+      <p class="home-f">每個人的星星分開記錄，可以各自闖關。把網址加上 <b>#miller</b> 或 <b>#migo</b>，就能直接打開自己的關卡地圖。</p>
+    </div>`);
+}
+addEventListener('hashchange', () => { const id = location.hash.slice(1); if (PROFILES[id]) { if (id !== PID) selectProfile(id); } else if (PROFILE) renderHome(); });
+const h0 = location.hash.slice(1);
+PROFILES[h0] ? selectProfile(h0) : renderHome();
 })();
 </script>
 </body>
